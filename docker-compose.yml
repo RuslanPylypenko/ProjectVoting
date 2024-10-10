@@ -1,0 +1,37 @@
+services:
+  api-nginx:
+    build:
+      context: './docker/nginx'
+    ports:
+      - "8081:80"
+    depends_on:
+      - api-php-fpm
+
+  api-php-fpm:
+    build:
+      context: './docker/php'
+    volumes:
+      - ./:/var/www/api
+    restart: on-failure
+    user: root
+    environment:
+      PHP_IDE_CONFIG: "serverName=Docker"
+    depends_on:
+      - api-mysql
+
+  api-mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: app
+      MYSQL_USER: user
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "33061:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
