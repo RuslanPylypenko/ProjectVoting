@@ -51,7 +51,7 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        return [];
+        return ['ROLE_USER'];
     }
 
     public function eraseCredentials(): void
@@ -67,5 +67,20 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     public function getPassword(): ?string
     {
         return $this->passwordHash;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
     }
 }

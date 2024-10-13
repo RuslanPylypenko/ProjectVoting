@@ -3,8 +3,8 @@ api:
     type: attribute
     prefix: 'api'
 
-login_check:
-    path: /api/auth/login_check
+login:
+    path: /api/auth/login
 
 api_refresh_token:
     path: /api/auth/token/refresh
