@@ -1,8 +1,7 @@
 api:
-    resource: ../src/**/Api/*Handler.php
+    resource: ../src/**/Api/**/*Handler.php
     type: attribute
     prefix: 'api'
-    name_prefix: api
 
 login_check:
     path: /api/auth/login_check

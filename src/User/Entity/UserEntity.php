@@ -1,13 +1,14 @@
 <?php
 
-namespace App\User;
+namespace App\User\Entity;
 
+use App\User\Repository\UsersRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ORM\Entity()]
+#[ORM\Entity(repositoryClass: UsersRepository::class)]
 #[ORM\Table(name: 'users')]
 class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
