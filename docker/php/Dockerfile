@@ -9,7 +9,7 @@ RUN apk add --no-cache curl git build-base zlib-dev oniguruma-dev libzip-dev aut
 RUN apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS\
     && docker-php-ext-install pdo_mysql zip \
     && pecl install xdebug \
-    && docker-php-ext-enable xdebug opcache \
+    && docker-php-ext-enable xdebug \
     && pecl clear-cache \
     && apk del .build-dependencies
 
