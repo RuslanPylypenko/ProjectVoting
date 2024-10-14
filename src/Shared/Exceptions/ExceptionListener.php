@@ -15,14 +15,10 @@ class ExceptionListener
     public function __invoke(ExceptionEvent $event): void
     {
         $exception = $event->getThrowable();
-        $message = sprintf(
-            '%s with code: %s',
-            $exception->getMessage(),
-            $exception->getCode()
-        );
 
         $response = new JsonResponse([
-            'error' => $message
+            'error' => $exception->getMessage(),
+            'code' => $exception->getCode()
         ]);
 
         if ($exception instanceof HttpExceptionInterface) {

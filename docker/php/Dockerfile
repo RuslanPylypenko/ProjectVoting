@@ -9,11 +9,14 @@ RUN apk add --no-cache curl git build-base zlib-dev oniguruma-dev libzip-dev aut
 RUN apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS\
     && docker-php-ext-install pdo_mysql zip \
     && pecl install xdebug \
-    && docker-php-ext-enable xdebug \
+    && docker-php-ext-enable xdebug opcache \
     && pecl clear-cache \
     && apk del .build-dependencies
 
 COPY ./config/xdebug.ini /usr/local/etc/php/conf.d/
+
+# Copy php.ini
+COPY ./config/php.ini /usr/local/etc/php/conf.d/php.ini
 
 # Configure non-root user.
 ARG PUID=1000
