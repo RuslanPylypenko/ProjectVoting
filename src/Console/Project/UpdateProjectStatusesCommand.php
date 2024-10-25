@@ -5,14 +5,17 @@ namespace App\Console\Project;
 use App\Domain\Project\ProjectStatusUpdater;
 use App\Infrastructure\Repository\SessionRepository;
 use DateTime;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(
+    name: 'app:update-project-statuses',
+    description: 'This is a custom Symfony console command.',
+)]
 class UpdateProjectStatusesCommand extends Command
 {
-    protected static $defaultName = 'app:update-project-statuses';
-
     public function __construct(
         private ProjectStatusUpdater $projectStatusUpdater,
         private SessionRepository $sessionRepository,

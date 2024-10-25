@@ -7,7 +7,6 @@ use App\Domain\Project\Entity\ProjectEntity;
 use App\Domain\Session\Entity\Requirement\SubmissionRequirements;
 use App\Domain\Session\Entity\Requirement\VotingRequirements;
 use App\Domain\Session\Entity\Requirement\WinnerRequirements;
-use App\Domain\Session\Enum\StageName;
 use App\Infrastructure\Repository\SessionRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -31,15 +30,15 @@ class SessionEntity
     private CityEntity $city;
 
     #[ORM\OneToOne(targetEntity: WinnerRequirements::class, inversedBy: 'session')]
-    #[ORM\JoinColumn(name: 'winner_requirements_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'winner_requirements_id', referencedColumnName: 'session_id', nullable: false)]
     private WinnerRequirements $winnerRequirements;
 
     #[ORM\OneToOne(targetEntity: SubmissionRequirements::class, inversedBy: 'session')]
-    #[ORM\JoinColumn(name: 'submission_requirements_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'submission_requirements_id', referencedColumnName: 'session_id', nullable: false)]
     private SubmissionRequirements $submissionRequirements;
 
     #[ORM\OneToOne(targetEntity: VotingRequirements::class, inversedBy: 'session')]
-    #[ORM\JoinColumn(name: 'voting_requirements_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'voting_requirements_id', referencedColumnName: 'session_id', nullable: false)]
     private VotingRequirements $votingRequirements;
 
     #[ORM\OneToMany(targetEntity: ProjectEntity::class, mappedBy: 'session', cascade: ['persist', 'remove'])]
