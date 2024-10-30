@@ -6,15 +6,14 @@ use App\Domain\User\Entity\UserEntity;
 
 class UserDTO
 {
-    public int $id;
-    public string $name;
-    public string $email;
-
-    public function __construct(int $id, string $name, string $email)
-    {
-        $this->id = $id;
-        $this->name = $name;
-        $this->email = $email;
+    public function __construct(
+        public int $id,
+        public string $name,
+        public string $email,
+        public string $birth_date,
+        public string $living_address,
+        public string $registration_address,
+    ) {
     }
 
     public static function fromEntity(UserEntity $user): self
@@ -22,7 +21,10 @@ class UserDTO
         return new self(
             $user->getId(),
             $user->getName(),
-            $user->getEmail()
+            $user->getEmail(),
+            $user->getBirthDate()->format('Y-m-d'),
+            $user->getLivingAddress()->getFullAddress(),
+            $user->getRegistrationAddress()->getFullAddress(),
         );
     }
 }

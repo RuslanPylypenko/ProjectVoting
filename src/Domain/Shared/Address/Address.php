@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping\Embeddable;
 class Address
 {
     #[Column(name: 'house_number', type: Types::STRING, length: 36, nullable: true)]
-    private string $houseNumber;
+    private ?string $houseNumber;
 
     #[Column(name: 'street', type: Types::STRING, length: 255, nullable: true)]
     private string $street;

@@ -41,7 +41,7 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     private Address $registrationAddress;
 
     #[ORM\OneToMany(targetEntity: VoteEntity::class, mappedBy: 'user')]
-    private readonly Collection $votes;
+    private Collection $votes;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private DateTime $createdAt;
@@ -137,5 +137,10 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     public function getVotes(): Collection
     {
         return $this->votes;
+    }
+
+    public function getBirthDate(): DateTime
+    {
+        return $this->birthDate;
     }
 }

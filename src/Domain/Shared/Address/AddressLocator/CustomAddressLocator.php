@@ -9,8 +9,7 @@ class CustomAddressLocator implements AddressLocatorInterface
 {
     public function __construct(
         private HttpClientInterface $client
-    )
-    {
+    ) {
     }
 
     public function findAddress(array $payload): Address
@@ -29,7 +28,7 @@ class CustomAddressLocator implements AddressLocatorInterface
             'Ukraine',
             $payload['street'],
             '01102',
-            $payload['houseNumber'] ?? null,
+            null,
         );
     }
 }
