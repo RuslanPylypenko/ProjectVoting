@@ -17,4 +17,12 @@ class WinnerRequirements
     #[Assert\NotBlank()]
     #[SerializedName('min_votes')]
     public int $minVotes;
+
+    public function __construct(
+        int $maxWinners,
+        int $minVotes
+    ) {
+        $this->maxWinners = $maxWinners;
+        $this->minVotes = $minVotes;
+    }
 }

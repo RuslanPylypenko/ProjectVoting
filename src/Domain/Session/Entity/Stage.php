@@ -16,7 +16,7 @@ class Stage
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::STRING, length: 32)]
+    #[ORM\Column(type: Types::STRING, length: 32, enumType: StageName::class)]
     private StageName $name;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -28,7 +28,12 @@ class Stage
     public function __construct(StageName $name, DateTime $startDate, DateTime $endDate)
     {
         if ($startDate > $endDate) {
-            throw new \InvalidArgumentException('Start date cannot be greater than end date');
+            throw new \InvalidArgumentException(sprintf(
+                'Invalid date range for stage "%s": Start date "%s" cannot be greater than end date "%s".',
+                $name->value,
+                $startDate->format('Y-m-d'),
+                $endDate->format('Y-m-d')
+            ));
         }
 
         $this->name = $name;

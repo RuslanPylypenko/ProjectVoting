@@ -21,4 +21,14 @@ class VotingRequirements
     #[Assert\NotBlank()]
     #[SerializedName('only_residents')]
     public bool $onlyResidents;
+
+    public function __construct(
+        int $maxVotes,
+        int $minAge,
+        bool $onlyResidents = false
+    ) {
+        $this->maxVotes = $maxVotes;
+        $this->minAge = $minAge;
+        $this->onlyResidents = $onlyResidents;
+    }
 }

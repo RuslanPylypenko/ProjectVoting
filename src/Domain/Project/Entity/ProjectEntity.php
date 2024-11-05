@@ -5,6 +5,7 @@ namespace App\Domain\Project\Entity;
 use App\Domain\Project\Enum\ProjectStatus;
 use App\Domain\Session\Entity\SessionEntity;
 use App\Domain\Shared\Address\Address;
+use App\Domain\Shared\Enum\Category;
 use App\Domain\User\Entity\UserEntity;
 use App\Domain\Vote\Entity\VoteEntity;
 use App\Infrastructure\Repository\ProjectsRepository;
@@ -40,9 +41,8 @@ class ProjectEntity
     #[ORM\Column(type: Types::DECIMAL)]
     private Money $budget;
 
-    #[ORM\ManyToMany(targetEntity: CategoryEntity::class, inversedBy: 'projects')]
-    #[ORM\JoinTable(name: 'projects_categories')]
-    private Collection $categories;
+    #[ORM\Column(type: Types::SMALLINT, options: ['unsigned' => true])]
+    private Category $category;
 
     #[ORM\Column(type: Types::SMALLINT, options: ['unsigned' => true])]
     private ProjectStatus $status;
@@ -73,6 +73,7 @@ class ProjectEntity
     public function __construct(
         string $title,
         string $description,
+        Category $category,
         Address $address,
         Money $budget,
         UserEntity $author,
@@ -84,17 +85,16 @@ class ProjectEntity
         $this->author = $author;
         $this->address = $address;
         $this->budget = $budget;
+        $this->category = $category;
 
         $this->session = $session;
 
-        $this->createdAt = $now = new DateTime();
-        $this->updatedAt = $now;
-
-        $this->categories = new ArrayCollection();
         $this->votes = new ArrayCollection();
 
         $this->status = ProjectStatus::PENDING;
 
+        $this->createdAt = $now = new DateTime();
+        $this->updatedAt = $now;
     }
 
     //=============================================
@@ -139,9 +139,9 @@ class ProjectEntity
         return $this->author;
     }
 
-    public function getCategory(): Collection
+    public function getCategory(): Category
     {
-        return $this->categories;
+        return $this->category;
     }
 
     public function getCreatedAt(): DateTime
@@ -167,28 +167,6 @@ class ProjectEntity
     public function getVotes(): Collection
     {
         return $this->votes;
-    }
-
-    //=============================================
-
-    public function addCategory(CategoryEntity $category): void
-    {
-        if ($this->categories->contains($category)) {
-            $this->categories[] = $category;
-        }
-    }
-
-    public function removeCategory(CategoryEntity $category): void
-    {
-        $this->categories->removeElement($category);
-    }
-
-    /**
-     * @return Collection<CategoryEntity>
-     */
-    public function getCategories(): Collection
-    {
-        return $this->categories;
     }
 
     public function getSession(): SessionEntity

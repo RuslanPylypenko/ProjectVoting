@@ -29,8 +29,8 @@ class VotingRequirements
     private bool $onlyResidents;
 
     public function __construct(
-        string $maxVotes,
-        string $onlyResidents,
+        int $maxVotes,
+        bool $onlyResidents,
         int $minAge
     )
     {

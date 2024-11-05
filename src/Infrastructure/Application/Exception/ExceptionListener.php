@@ -18,7 +18,6 @@ class ExceptionListener
 
         $response = new JsonResponse([
             'error' => $exception->getMessage(),
-            'code' => $exception->getCode(),
         ]);
 
         if ($exception instanceof HttpExceptionInterface) {

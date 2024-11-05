@@ -13,11 +13,10 @@ class CategoryRule implements ProjectRulesInterface
 
     public function validate(ProjectEntity $project): void
     {
-        foreach ($project->getCategories() as $category) {
-            if (in_array($category->getId(), $this->categoryIds)) {
-                return;
-            }
+        if (in_array($project->getCategory()->value, $this->categoryIds)) {
+            return;
         }
+
         throw new ProjectRuleValidationException('Category is not valid');
     }
 }

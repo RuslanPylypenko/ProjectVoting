@@ -1,20 +1,25 @@
 <?php
 
 namespace App\Application\Session\Command\Create;
+use App\Domain\Shared\Enum\Category;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class SubmissionRequirements
 {
-    #[Assert\Type('integer')]
     #[Assert\NotBlank()]
+    #[Assert\Positive()]
     #[SerializedName('min_age')]
     public int $minAge;
 
     #[Assert\All([
-        new Assert\Type("integer")
+        new Assert\NotBlank(),
+        new Assert\Type('string'),
+        new Assert\Choice(
+            choices: Category::VALUES,
+            message: 'The category "{{ value }}" is not a valid choice.'
+        ),
     ])]
-    #[Assert\NotBlank()]
     public array $categories;
 
     #[Assert\Type('integer')]
@@ -31,4 +36,18 @@ class SubmissionRequirements
     #[Assert\NotBlank()]
     #[SerializedName('only_residents')]
     public bool $onlyResidents;
+
+    public function __construct(
+        int $minAge,
+        array $categories,
+        int $minBudget,
+        int $maxBudget,
+        bool $onlyResidents
+    ) {
+        $this->categories = $categories;
+        $this->maxBudget = $maxBudget;
+        $this->minAge = $minAge;
+        $this->minBudget = $minBudget;
+        $this->onlyResidents = $onlyResidents;
+    }
 }
