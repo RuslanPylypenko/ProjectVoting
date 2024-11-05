@@ -24,7 +24,7 @@ class CommandValueResolver implements ValueResolverInterface
             return [];
         }
 
-        $command = $this->commandNormalizer->denormalize($argumentType, $request->toArray());
+        $command = $this->commandNormalizer->deserialize($argumentType, $request->getContent());
         $errors  = $this->validator->validate($command);
 
         if (count($errors) > 0) {

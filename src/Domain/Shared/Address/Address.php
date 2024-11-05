@@ -13,7 +13,7 @@ class Address
     private ?string $houseNumber;
 
     #[Column(name: 'street', type: Types::STRING, length: 255, nullable: true)]
-    private string $street;
+    private ?string $street;
 
     #[Column(name: 'postal_code', type: Types::STRING, length: 16, nullable: true)]
     private ?int $postalCode;

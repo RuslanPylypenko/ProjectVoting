@@ -8,8 +8,17 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'winner_requirements')]
-class WinnerRequirements extends BaseSessionRequirementEntity
+class WinnerRequirements
 {
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\OneToOne(targetEntity: SessionEntity::class, inversedBy: 'winnerRequirements')]
+    #[ORM\JoinColumn(name: 'session_id', referencedColumnName: 'id', nullable: false)]
+    private SessionEntity $session;
+
     #[ORM\Column(name: 'max_winners', type: Types::INTEGER)]
     private int $maxWinners;
 
@@ -19,11 +28,9 @@ class WinnerRequirements extends BaseSessionRequirementEntity
     public function __construct(
         int $maxWinners,
         int $minVotes,
-        SessionEntity $session,
     ) {
         $this->maxWinners = $maxWinners;
         $this->minVotes = $minVotes;
-        parent::__construct($session);
     }
 
     public function getMaxWinners(): int
@@ -36,4 +43,8 @@ class WinnerRequirements extends BaseSessionRequirementEntity
         return $this->minVotes;
     }
 
+    public function setSession(SessionEntity $session): void
+    {
+        $this->session = $session;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Application\Command;
 
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
@@ -19,13 +20,13 @@ class CommandNormalizer
         $metadataAwareNameConverter = new MetadataAwareNameConverter($classMetadataFactory);
 
         $this->serializer = new Serializer(
-            [new ObjectNormalizer($classMetadataFactory, $metadataAwareNameConverter)],
+            [new ObjectNormalizer($classMetadataFactory, $metadataAwareNameConverter, null, new ReflectionExtractor())],
             ['json' => new JsonEncoder()]
         );
     }
 
-    public function denormalize(string $className, array $data): CommandInterface
+    public function deserialize(string $className, string $jsonData): CommandInterface
     {
-        return $this->serializer->denormalize($data, $className);
+        return $this->serializer->deserialize($jsonData, $className, 'json');
     }
 }

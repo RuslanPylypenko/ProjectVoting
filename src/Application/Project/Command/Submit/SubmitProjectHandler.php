@@ -8,7 +8,6 @@ use App\Domain\Project\DTO\ProjectDTO;
 use App\Domain\Project\Factory\ProjectFactory;
 use App\Domain\Project\Validator\ProjectValidator;
 use App\Domain\Project\Validator\Rule\RuleFactory;
-use App\Domain\Session\Entity\SessionEntity;
 use App\Domain\User\Entity\UserEntity;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

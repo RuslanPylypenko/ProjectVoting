@@ -29,21 +29,28 @@ class CityEntity
     private Address $address;
 
     #[ORM\OneToMany(targetEntity: SessionEntity::class, mappedBy: 'city', cascade: ['persist', 'remove'])]
-    private readonly Collection $sessions;
+    private Collection $sessions;
 
     //=============================================
 
     public function __construct(
         string $title,
+        string $slug,
         Address $address,
     ) {
         $this->address = $address;
         $this->title = $title;
+        $this->slug = $slug;
 
         $this->sessions = new ArrayCollection();
     }
 
     //=============================================
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 
     public function getAddress(): Address
     {
@@ -53,6 +60,11 @@ class CityEntity
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
     }
 
     public function getCurrentSession(?DateTime $date = null): SessionEntity

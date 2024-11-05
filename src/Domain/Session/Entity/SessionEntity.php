@@ -29,22 +29,19 @@ class SessionEntity
     #[ORM\JoinColumn(name: 'city_id', referencedColumnName: 'id', nullable: false)]
     private CityEntity $city;
 
-    #[ORM\OneToOne(targetEntity: WinnerRequirements::class, inversedBy: 'session')]
-    #[ORM\JoinColumn(name: 'winner_requirements_id', referencedColumnName: 'session_id', nullable: false)]
+    #[ORM\OneToOne(targetEntity: WinnerRequirements::class, mappedBy: 'session', cascade: ['persist'])]
     private WinnerRequirements $winnerRequirements;
 
-    #[ORM\OneToOne(targetEntity: SubmissionRequirements::class, inversedBy: 'session')]
-    #[ORM\JoinColumn(name: 'submission_requirements_id', referencedColumnName: 'session_id', nullable: false)]
+    #[ORM\OneToOne(targetEntity: SubmissionRequirements::class, mappedBy: 'session', cascade: ['persist'])]
     private SubmissionRequirements $submissionRequirements;
 
-    #[ORM\OneToOne(targetEntity: VotingRequirements::class, inversedBy: 'session')]
-    #[ORM\JoinColumn(name: 'voting_requirements_id', referencedColumnName: 'session_id', nullable: false)]
+    #[ORM\OneToOne(targetEntity: VotingRequirements::class, mappedBy: 'session', cascade: ['persist'])]
     private VotingRequirements $votingRequirements;
 
     #[ORM\OneToMany(targetEntity: ProjectEntity::class, mappedBy: 'session', cascade: ['persist', 'remove'])]
-    private readonly Collection $projects;
+    private Collection $projects;
 
-    /** @var Collection<Stage>  */
+    /** @var Collection<Stage> */
     #[ORM\OneToMany(targetEntity: Stage::class, mappedBy: 'session', cascade: ['persist', 'remove'])]
     private Collection $stages;
 
@@ -52,18 +49,19 @@ class SessionEntity
         string $name,
         CityEntity $city,
         WinnerRequirements $winnerRequirements,
-        SubmissionRequirements $submissionRequirements,
-        VotingRequirements $votingRequirements
+        VotingRequirements $votingRequirements,
+        SubmissionRequirements $submissionRequirements
     )
     {
         $this->city = $city;
         $this->name = $name;
-        $this->winnerRequirements = $winnerRequirements;
-        $this->submissionRequirements = $submissionRequirements;
-        $this->votingRequirements = $votingRequirements;
 
         $this->stages = new ArrayCollection();
         $this->projects = new ArrayCollection();
+
+        $this->setWinnerRequirements($winnerRequirements);
+        $this->setVotingRequirements($votingRequirements);
+        $this->setSubmissionRequirements($submissionRequirements);
     }
 
     public function getId(): int
@@ -104,12 +102,12 @@ class SessionEntity
     public function getActiveStage(DateTime $date): Stage
     {
         foreach ($this->stages as $stage) {
-            if($stage->isActive($date)) {
+            if ($stage->isActive($date)) {
                 return $stage;
             }
         }
 
-       return $this->stages->last();
+        return $this->stages->last();
     }
 
     /**
@@ -123,5 +121,23 @@ class SessionEntity
     public function getWinnerRequirements(): WinnerRequirements
     {
         return $this->winnerRequirements;
+    }
+
+    public function setWinnerRequirements(WinnerRequirements $winnerRequirements): void
+    {
+        $this->winnerRequirements = $winnerRequirements;
+        $winnerRequirements->setSession($this);
+    }
+
+    public function setVotingRequirements(VotingRequirements $votingRequirements): void
+    {
+        $this->votingRequirements = $votingRequirements;
+        $votingRequirements->setSession($this);
+    }
+
+    public function setSubmissionRequirements(SubmissionRequirements $submissionRequirements): void
+    {
+        $this->submissionRequirements = $submissionRequirements;
+        $submissionRequirements->setSession($this);
     }
 }

@@ -19,7 +19,7 @@ class CityResolver implements ValueResolverInterface
     {
         $argumentType = $argument->getType();
 
-        if (!$argumentType || !is_subclass_of($argumentType, CityEntity::class)) {
+        if (!$argumentType || $argumentType !== CityEntity::class) {
             return [];
         }
 

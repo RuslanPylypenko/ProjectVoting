@@ -8,8 +8,17 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'voting_requirements')]
-class VotingRequirements extends BaseSessionRequirementEntity
+class VotingRequirements
 {
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\OneToOne(targetEntity: SessionEntity::class, inversedBy: 'votingRequirements')]
+    #[ORM\JoinColumn(name: 'session_id', referencedColumnName: 'id', nullable: false)]
+    private SessionEntity $session;
+
     #[ORM\Column(name: 'min_age', type: Types::INTEGER)]
     private int $minAge;
 
@@ -22,15 +31,12 @@ class VotingRequirements extends BaseSessionRequirementEntity
     public function __construct(
         string $maxVotes,
         string $onlyResidents,
-        int $minAge,
-        SessionEntity $session,
+        int $minAge
     )
     {
         $this->maxVotes = $maxVotes;
         $this->minAge = $minAge;
         $this->onlyResidents = $onlyResidents;
-
-        parent::__construct($session);
     }
 
     public function getMinAge(): int
@@ -46,5 +52,10 @@ class VotingRequirements extends BaseSessionRequirementEntity
     public function isOnlyResidents(): bool
     {
         return $this->onlyResidents;
+    }
+
+    public function setSession(SessionEntity $session): void
+    {
+        $this->session = $session;
     }
 }

@@ -10,8 +10,17 @@ use Money\Money;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'submission_requirements')]
-class SubmissionRequirements extends BaseSessionRequirementEntity
+class SubmissionRequirements
 {
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\OneToOne(targetEntity: SessionEntity::class, inversedBy: 'submissionRequirements')]
+    #[ORM\JoinColumn(name: 'session_id', referencedColumnName: 'id', nullable: false)]
+    private SessionEntity $session;
+
     #[ORM\Column(name: 'min_age', type: Types::INTEGER)]
     private int $minAge;
 
@@ -33,15 +42,12 @@ class SubmissionRequirements extends BaseSessionRequirementEntity
         Money $minBudget,
         Money $maxBudget,
         bool $onlyResidents,
-        SessionEntity $session,
     ) {
         $this->categories = $categories;
         $this->maxBudget = $maxBudget;
         $this->minAge = $minAge;
         $this->minBudget = $minBudget;
         $this->onlyResidents = $onlyResidents;
-
-        parent::__construct($session);
     }
 
     public function getMinAge(): int
@@ -67,5 +73,10 @@ class SubmissionRequirements extends BaseSessionRequirementEntity
     public function isOnlyResidents(): bool
     {
         return $this->onlyResidents;
+    }
+
+    public function setSession(SessionEntity $session): void
+    {
+        $this->session = $session;
     }
 }
