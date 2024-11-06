@@ -25,7 +25,7 @@ class CommandValueResolver implements ValueResolverInterface
         }
 
         $command = $this->commandNormalizer->deserialize($argumentType, $request->getContent());
-        $errors  = $this->validator->validate($command);
+        $errors = $this->validator->validate($command);
 
         if (count($errors) > 0) {
             throw new ValidationFailedException($command, $errors);

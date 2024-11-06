@@ -16,8 +16,7 @@ class CreateCityHandler extends AbstractController
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-    )
-    {
+    ) {
     }
 
     #[Route('/cities/create', methods: ['POST'])]

@@ -5,7 +5,6 @@ namespace App\Domain\User\Entity;
 use App\Domain\Shared\Address\Address;
 use App\Domain\Vote\Entity\VoteEntity;
 use App\Infrastructure\Repository\UsersRepository;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -29,7 +28,7 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     private string $email;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private DateTime $birthDate;
+    private \DateTime $birthDate;
 
     #[ORM\Column(name: 'password_hash', type: Types::STRING, length: 100)]
     private string $passwordHash;
@@ -44,10 +43,10 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $votes;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private DateTime $createdAt;
+    private \DateTime $createdAt;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private DateTime $updatedAt;
+    private \DateTime $updatedAt;
 
     public function __construct(
         string $name,
@@ -55,9 +54,8 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
         string $password,
         Address $livingAddress,
         Address $registeredAddress,
-        DateTime $birthDate,
-    )
-    {
+        \DateTime $birthDate,
+    ) {
         $this->email = $email;
         $this->name = $name;
 
@@ -67,7 +65,7 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
 
         $this->votes = new ArrayCollection();
 
-        $this->createdAt = $now = new DateTime();
+        $this->createdAt = $now = new \DateTime();
         $this->updatedAt = $now;
 
         $this->setPassword($password);
@@ -121,7 +119,7 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getAge(): int
     {
-        return (new DateTime())->diff($this->birthDate)->y;
+        return (new \DateTime())->diff($this->birthDate)->y;
     }
 
     public function getLivingAddress(): Address
@@ -139,7 +137,7 @@ class UserEntity implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->votes;
     }
 
-    public function getBirthDate(): DateTime
+    public function getBirthDate(): \DateTime
     {
         return $this->birthDate;
     }

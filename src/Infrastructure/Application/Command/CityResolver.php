@@ -19,13 +19,13 @@ class CityResolver implements ValueResolverInterface
     {
         $argumentType = $argument->getType();
 
-        if (!$argumentType || $argumentType !== CityEntity::class) {
+        if (!$argumentType || CityEntity::class !== $argumentType) {
             return [];
         }
 
         $city = $this->em->getRepository(CityEntity::class)->findOneBy(['slug' => 'Kyiv']);
 
-        if(null === $city) {
+        if (null === $city) {
             throw new \RuntimeException('City not found');
         }
 

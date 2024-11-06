@@ -35,7 +35,7 @@ class SessionFactory
             minVotes: $command->winnerRequirements->minVotes,
         );
 
-        $stages = array_map(static fn($stage) => new Stage(
+        $stages = array_map(static fn ($stage) => new Stage(
             StageName::from($stage['name']),
             new \DateTime($stage['start_date']),
             new \DateTime($stage['end_date']),

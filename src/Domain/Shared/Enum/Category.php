@@ -25,7 +25,7 @@ enum Category: string
 
     public static function values(): array
     {
-        return array_map(fn(Category $category) => $category->value , self::cases());
+        return array_map(fn (Category $category) => $category->value, self::cases());
     }
 
     public function title(): string

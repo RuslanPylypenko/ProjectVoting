@@ -5,7 +5,6 @@ namespace App\Application\Session\Command\Create;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 class WinnerRequirements
 {
     #[Assert\Type('integer')]
@@ -20,7 +19,7 @@ class WinnerRequirements
 
     public function __construct(
         int $maxWinners,
-        int $minVotes
+        int $minVotes,
     ) {
         $this->maxWinners = $maxWinners;
         $this->minVotes = $minVotes;

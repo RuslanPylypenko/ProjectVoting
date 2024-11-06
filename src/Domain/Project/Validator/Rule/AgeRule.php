@@ -13,10 +13,10 @@ class AgeRule implements ProjectRulesInterface
 
     public function validate(ProjectEntity $project): void
     {
-       if ($project->getAuthor()->getAge() >= $this->minAge) {
-           return;
-       }
+        if ($project->getAuthor()->getAge() >= $this->minAge) {
+            return;
+        }
 
-       throw new ProjectRuleValidationException('Age rule cannot be less than ' . $this->minAge);
+        throw new ProjectRuleValidationException('Age rule cannot be less than '.$this->minAge);
     }
 }

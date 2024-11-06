@@ -18,8 +18,7 @@ class RegisterHandler extends AbstractController
         private UsersRepository $usersRepository,
         private AddressLocatorInterface $addressLocator,
         private EntityManagerInterface $em,
-    )
-    {
+    ) {
     }
 
     #[Route('/auth/registration', methods: ['POST'])]

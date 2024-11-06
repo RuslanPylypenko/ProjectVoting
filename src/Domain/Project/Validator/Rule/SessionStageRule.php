@@ -9,10 +9,10 @@ class SessionStageRule implements ProjectRulesInterface
 {
     public function validate(ProjectEntity $project): void
     {
-       if ($project->getSession()->getActiveStage(new \DateTime())->isSubmission() ) {
-           return;
-       }
+        if ($project->getSession()->getActiveStage(new \DateTime())->isSubmission()) {
+            return;
+        }
 
-       throw new ProjectRuleValidationException('Session must me on Submission stage');
+        throw new ProjectRuleValidationException('Session must me on Submission stage');
     }
 }

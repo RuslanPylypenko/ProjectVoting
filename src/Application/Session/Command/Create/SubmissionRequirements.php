@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Application\Session\Command\Create;
+
 use App\Domain\Shared\Enum\Category;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -32,7 +33,7 @@ class SubmissionRequirements
     #[SerializedName('max_budget')]
     public int $maxBudget;
 
-    #[Assert\Type("bool")]
+    #[Assert\Type('bool')]
     #[Assert\NotBlank()]
     #[SerializedName('only_residents')]
     public bool $onlyResidents;
@@ -42,7 +43,7 @@ class SubmissionRequirements
         array $categories,
         int $minBudget,
         int $maxBudget,
-        bool $onlyResidents
+        bool $onlyResidents,
     ) {
         $this->categories = $categories;
         $this->maxBudget = $maxBudget;

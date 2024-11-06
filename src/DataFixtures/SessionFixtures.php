@@ -9,16 +9,13 @@ use App\Application\Session\Command\Create\SubmissionRequirements;
 use App\Application\Session\Command\Create\VotingRequirements;
 use App\Application\Session\Command\Create\WinnerRequirements;
 use App\Domain\City\Entity\CityEntity;
-use App\Domain\Session\Entity\Stage;
 use App\Domain\Session\Enum\StageName;
 use App\Domain\Session\Factory\SessionFactory;
 use App\Domain\Shared\Enum\Category;
-use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
-use function Symfony\Component\String\s;
 
 class SessionFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -33,9 +30,9 @@ class SessionFixtures extends Fixture implements DependentFixtureInterface
         $cities = $manager->getRepository(CityEntity::class)->findAll();
         foreach ($cities as $city) {
             $sessionsCount = random_int(2, 4);
-            for ($i = 0; $i <= $sessionsCount; $i++) {
+            for ($i = 0; $i <= $sessionsCount; ++$i) {
                 $end = null;
-                $start = (new DateTime())->modify('-' . random_int(0, 5) . ' weeks')->modify('-' . $i . ' years');
+                $start = (new \DateTime())->modify('-'.random_int(0, 5).' weeks')->modify('-'.$i.' years');
 
                 $stages = [];
                 foreach (StageName::cases() as $key => $stageName) {
@@ -71,7 +68,7 @@ class SessionFixtures extends Fixture implements DependentFixtureInterface
                 );
 
                 $command = new CreateSessionCommand(
-                    "Бюджет міста " . date('Y', $start->getTimestamp()),
+                    'Бюджет міста '.date('Y', $start->getTimestamp()),
                     $stages,
                     $submission,
                     $voting,

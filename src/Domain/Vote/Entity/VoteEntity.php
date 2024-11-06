@@ -4,7 +4,6 @@ namespace App\Domain\Vote\Entity;
 
 use App\Domain\Project\Entity\ProjectEntity;
 use App\Domain\User\Entity\UserEntity;
-use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,19 +25,18 @@ class VoteEntity
     private readonly UserEntity $user;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private DateTime $createdAt;
+    private \DateTime $createdAt;
 
-    //=============================================
+    // =============================================
 
     public function __construct(
         ProjectEntity $project,
         UserEntity $user,
     ) {
-
         $this->project = $project;
         $this->user = $user;
 
-        $this->createdAt = new DateTime();
+        $this->createdAt = new \DateTime();
     }
 
     public function getProject(): ProjectEntity
@@ -51,7 +49,7 @@ class VoteEntity
         return $this->user;
     }
 
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }

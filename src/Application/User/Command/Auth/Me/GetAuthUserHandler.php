@@ -23,7 +23,7 @@ class GetAuthUserHandler extends AbstractController
         }
 
         return new JsonResponse([
-            'user' => UserDTO::fromEntity($user)
+            'user' => UserDTO::fromEntity($user),
         ]);
     }
 }

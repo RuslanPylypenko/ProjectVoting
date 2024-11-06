@@ -4,7 +4,6 @@ namespace App\Domain\City\Entity;
 
 use App\Domain\Session\Entity\SessionEntity;
 use App\Domain\Shared\Address\Address;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -31,7 +30,7 @@ class CityEntity
     #[ORM\OneToMany(targetEntity: SessionEntity::class, mappedBy: 'city', cascade: ['persist', 'remove'])]
     private Collection $sessions;
 
-    //=============================================
+    // =============================================
 
     public function __construct(
         string $title,
@@ -45,7 +44,7 @@ class CityEntity
         $this->sessions = new ArrayCollection();
     }
 
-    //=============================================
+    // =============================================
 
     public function getId(): int
     {
@@ -67,9 +66,9 @@ class CityEntity
         return $this->slug;
     }
 
-    public function getCurrentSession(?DateTime $date = null): SessionEntity
+    public function getCurrentSession(?\DateTime $date = null): SessionEntity
     {
-        $date = $date ?? new DateTime();
+        $date = $date ?? new \DateTime();
         foreach ($this->sessions as $session) {
             if ($session->getActiveStage($date)) {
                 return $session;

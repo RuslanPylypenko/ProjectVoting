@@ -17,7 +17,7 @@ class VotingRequirements
     #[SerializedName('min_age')]
     public int $minAge;
 
-    #[Assert\Type("bool")]
+    #[Assert\Type('bool')]
     #[Assert\NotBlank()]
     #[SerializedName('only_residents')]
     public bool $onlyResidents;
@@ -25,7 +25,7 @@ class VotingRequirements
     public function __construct(
         int $maxVotes,
         int $minAge,
-        bool $onlyResidents = false
+        bool $onlyResidents = false,
     ) {
         $this->maxVotes = $maxVotes;
         $this->minAge = $minAge;

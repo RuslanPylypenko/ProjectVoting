@@ -16,8 +16,7 @@ class CreateSessionHandler extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
         private SessionFactory $sessionFactory,
-    )
-    {
+    ) {
     }
 
     #[Route('/sessions/create', methods: ['POST'])]

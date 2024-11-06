@@ -15,7 +15,7 @@ class RuleFactory
             new AgeRule($requirements->getMinAge()),
             new AddressRule($session->getCity()->getAddress()),
             new CategoryRule($requirements->getCategories()),
-            new BudgetRule($requirements->getMinBudget(),$requirements->getMaxBudget()),
+            new BudgetRule($requirements->getMinBudget(), $requirements->getMaxBudget()),
         ];
     }
 }

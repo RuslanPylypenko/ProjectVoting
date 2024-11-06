@@ -9,7 +9,6 @@ use App\Domain\Shared\Enum\Category;
 use App\Domain\User\Entity\UserEntity;
 use App\Domain\Vote\Entity\VoteEntity;
 use App\Infrastructure\Repository\ProjectsRepository;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -62,13 +61,13 @@ class ProjectEntity
     private ?UserEntity $rejectedBy = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTime $rejectedAt = null;
+    private ?\DateTime $rejectedAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private DateTime $createdAt;
+    private \DateTime $createdAt;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private DateTime $updatedAt;
+    private \DateTime $updatedAt;
 
     public function __construct(
         string $title,
@@ -78,8 +77,7 @@ class ProjectEntity
         Money $budget,
         UserEntity $author,
         SessionEntity $session,
-    )
-    {
+    ) {
         $this->description = $description;
         $this->title = $title;
         $this->author = $author;
@@ -93,11 +91,11 @@ class ProjectEntity
 
         $this->status = ProjectStatus::PENDING;
 
-        $this->createdAt = $now = new DateTime();
+        $this->createdAt = $now = new \DateTime();
         $this->updatedAt = $now;
     }
 
-    //=============================================
+    // =============================================
 
     public function getId(): ?int
     {
@@ -129,7 +127,7 @@ class ProjectEntity
         return $this->rejectedBy;
     }
 
-    public function getRejectedAt(): ?DateTime
+    public function getRejectedAt(): ?\DateTime
     {
         return $this->rejectedAt;
     }
@@ -144,12 +142,12 @@ class ProjectEntity
         return $this->category;
     }
 
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): DateTime
+    public function getUpdatedAt(): \DateTime
     {
         return $this->updatedAt;
     }
@@ -174,14 +172,14 @@ class ProjectEntity
         return $this->session;
     }
 
-    //=============================================
+    // =============================================
 
     public function addVote(VoteEntity $vote): void
     {
         $this->votes[] = $vote;
     }
 
-    //=============================================
+    // =============================================
 
     public function approve(): void
     {
@@ -192,7 +190,7 @@ class ProjectEntity
         $this->status = ProjectStatus::APPROVED;
     }
 
-    public function reject(string $reason, DateTime $rejectedAt, ?UserEntity $by = null): void
+    public function reject(string $reason, \DateTime $rejectedAt, ?UserEntity $by = null): void
     {
         if ($this->isRejected()) {
             throw new \DomainException('Status already rejected!');
@@ -222,36 +220,37 @@ class ProjectEntity
 
     public function isApproved(): bool
     {
-        return $this->status === ProjectStatus::APPROVED;
+        return ProjectStatus::APPROVED === $this->status;
     }
 
     public function isWinner(): bool
     {
-        return $this->status === ProjectStatus::WINNER;
+        return ProjectStatus::WINNER === $this->status;
     }
 
     public function isNotWinner(): bool
     {
-        return $this->status === ProjectStatus::NOT_A_WINNER;
+        return ProjectStatus::NOT_A_WINNER === $this->status;
     }
 
     public function inReview(): bool
     {
-        return $this->status === ProjectStatus::IN_REVIEW;
+        return ProjectStatus::IN_REVIEW === $this->status;
     }
 
     public function isPending(): bool
     {
-        return $this->status === ProjectStatus::PENDING;
+        return ProjectStatus::PENDING === $this->status;
     }
+
     public function isVoting(): bool
     {
-        return $this->status === ProjectStatus::VOTING;
+        return ProjectStatus::VOTING === $this->status;
     }
 
     public function isRejected(): bool
     {
-        return $this->status === ProjectStatus::REJECTED;
+        return ProjectStatus::REJECTED === $this->status;
     }
 
     public function setStatus(ProjectStatus $status): void
@@ -267,6 +266,5 @@ class ProjectEntity
         $this->status = $status;
     }
 
-    //=============================================
-
+    // =============================================
 }

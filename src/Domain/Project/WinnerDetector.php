@@ -19,7 +19,7 @@ class WinnerDetector
             return false;
         }
 
-        $topProjects =  $this->sessionRepository->findTopProjects($session, $session->getWinnerRequirements()->getMaxWinners());
+        $topProjects = $this->sessionRepository->findTopProjects($session, $session->getWinnerRequirements()->getMaxWinners());
 
         foreach ($topProjects as $projectInfo) {
             if ($project->getId() === $projectInfo->getId()) {

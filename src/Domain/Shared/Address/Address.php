@@ -24,7 +24,7 @@ class Address
     #[Column(name: 'country', type: Types::STRING, length: 255)]
     private string $country;
 
-    //=============================================
+    // =============================================
 
     public function __construct(
         string $city,
@@ -40,16 +40,16 @@ class Address
         $this->houseNumber = $houseNumber;
     }
 
-    //=============================================
+    // =============================================
 
     public function getFullAddress(): string
     {
         return sprintf(
             '%s, %s м. %s, %s, %s',
-            $this->postalCode, 
-            $this->country, 
-            $this->city, 
-            $this->street, 
+            $this->postalCode,
+            $this->country,
+            $this->city,
+            $this->street,
             $this->houseNumber
         );
     }

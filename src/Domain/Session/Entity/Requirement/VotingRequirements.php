@@ -31,9 +31,8 @@ class VotingRequirements
     public function __construct(
         int $maxVotes,
         bool $onlyResidents,
-        int $minAge
-    )
-    {
+        int $minAge,
+    ) {
         $this->maxVotes = $maxVotes;
         $this->minAge = $minAge;
         $this->onlyResidents = $onlyResidents;

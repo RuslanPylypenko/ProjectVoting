@@ -24,7 +24,7 @@ class ApproveProjectHandler
         $this->em->flush();
 
         return new JsonResponse([
-            'success' => true
+            'success' => true,
         ]);
     }
 }

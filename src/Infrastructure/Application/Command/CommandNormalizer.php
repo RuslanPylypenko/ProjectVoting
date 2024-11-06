@@ -16,7 +16,7 @@ class CommandNormalizer
 
     public function __construct()
     {
-        $classMetadataFactory       = new ClassMetadataFactory(new AttributeLoader());
+        $classMetadataFactory = new ClassMetadataFactory(new AttributeLoader());
         $metadataAwareNameConverter = new MetadataAwareNameConverter($classMetadataFactory);
 
         $this->serializer = new Serializer(

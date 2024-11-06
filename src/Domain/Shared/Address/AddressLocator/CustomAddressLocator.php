@@ -8,7 +8,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class CustomAddressLocator implements AddressLocatorInterface
 {
     public function __construct(
-        private HttpClientInterface $client
+        private HttpClientInterface $client,
     ) {
     }
 
@@ -19,7 +19,7 @@ class CustomAddressLocator implements AddressLocatorInterface
             url: 'https://google.com',
         );
 
-        if ($response->getStatusCode() !== 200) {
+        if (200 !== $response->getStatusCode()) {
             throw new \Exception('Something went wrong');
         }
 

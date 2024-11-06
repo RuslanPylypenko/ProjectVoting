@@ -14,7 +14,7 @@ class MoneyType extends Type
 
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
-        return "VARCHAR(255)";
+        return 'VARCHAR(255)';
     }
 
     /**
@@ -22,18 +22,18 @@ class MoneyType extends Type
      */
     public function convertToPHPValue($value, AbstractPlatform $platform): ?Money
     {
-        if ($value === null) {
+        if (null === $value) {
             return null;
         }
 
         [$amount, $currency] = explode(' ', $value);
 
-        return new Money((float)$amount, new Currency($currency));
+        return new Money((float) $amount, new Currency($currency));
     }
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
-        if ($value === null) {
+        if (null === $value) {
             return null;
         }
 
@@ -41,7 +41,7 @@ class MoneyType extends Type
             throw new \InvalidArgumentException('Value must be an instance of "Money".');
         }
 
-        return $value->getAmount() . ' ' . $value->getCurrency()->getName();
+        return $value->getAmount().' '.$value->getCurrency()->getName();
     }
 
     public function getName(): string

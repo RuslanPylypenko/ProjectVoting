@@ -14,9 +14,9 @@ class AddressRule implements ProjectRulesInterface
 
     public function validate(ProjectEntity $project): void
     {
-        if($project->getAddress()->isSameCity($this->requiredAddress)
-            && ($project->getAuthor()->getLivingAddress()->isSameCity($this->requiredAddress) ||
-                $project->getAuthor()->getRegistrationAddress()->isSameCity($this->requiredAddress))) {
+        if ($project->getAddress()->isSameCity($this->requiredAddress)
+            && ($project->getAuthor()->getLivingAddress()->isSameCity($this->requiredAddress)
+                || $project->getAuthor()->getRegistrationAddress()->isSameCity($this->requiredAddress))) {
             return;
         }
 

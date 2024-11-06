@@ -40,7 +40,6 @@ class ExceptionListener
             $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-
         $event->setResponse($response);
     }
 }

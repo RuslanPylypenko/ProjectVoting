@@ -15,8 +15,7 @@ class CreateCategoryCommand extends Command
 {
     public function __construct(
         private EntityManagerInterface $em,
-    )
-    {
+    ) {
         parent::__construct();
     }
 
@@ -30,11 +29,13 @@ class CreateCategoryCommand extends Command
 
         if (empty($name)) {
             $output->writeln('<error>Category name cannot be empty</error>');
+
             return Command::FAILURE;
         }
 
         if (null !== $this->em->getRepository(CategoryEntity::class)->findOneBy(['name' => $name])) {
             $output->writeln('<error>Category name already exists</error>');
+
             return Command::FAILURE;
         }
 

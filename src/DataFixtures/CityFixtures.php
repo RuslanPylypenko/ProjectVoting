@@ -15,14 +15,14 @@ class CityFixtures extends Fixture
         $faker = Factory::create('uk_UA');
 
         $city = new CityEntity(
-            "Львів",
+            'Львів',
             'lviv',
             new Address('Львів', 'Україна')
         );
         $manager->persist($city);
 
         $city = new CityEntity(
-            "Київ",
+            'Київ',
             'kyiv',
             new Address('Київ', 'Україна'),
         );

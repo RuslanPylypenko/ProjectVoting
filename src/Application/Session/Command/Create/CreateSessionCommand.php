@@ -57,8 +57,7 @@ class CreateSessionCommand implements CommandInterface
         SubmissionRequirements $submissionRequirements,
         VotingRequirements $votingRequirements,
         WinnerRequirements $winnerRequirements,
-    )
-    {
+    ) {
         $this->name = $name;
         $this->stages = $stages;
         $this->submissionRequirements = $submissionRequirements;
