@@ -30,13 +30,16 @@ api-test:
 	docker compose run --rm api-php-fpm ./vendor/bin/phpunit
 
 api-migrations:
-	docker compose run --rm api-php-fpm composer app do:mi:mi --no-interaction
+	docker compose run --rm api-php-fpm php bin/console do:mi:mi --no-interaction
 
 api-composer-install:
 	docker compose run --rm api-php-fpm composer install
 
 api-wait-db:
 	docker compose run --rm api-php-fpm wait-for-it api-mysql:3306 -t 30
+
+validate:
+	docker compose run --rm api-php-fpm ./vendor/bin/php-cs-fixer fix
 
 bash:
 	docker compose exec api-php-fpm bash

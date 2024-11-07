@@ -27,6 +27,7 @@ class CityEntity
     #[ORM\Embedded(class: Address::class, columnPrefix: 'address_')]
     private Address $address;
 
+    /** @var Collection<SessionEntity> */
     #[ORM\OneToMany(targetEntity: SessionEntity::class, mappedBy: 'city', cascade: ['persist', 'remove'])]
     private Collection $sessions;
 

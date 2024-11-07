@@ -7,7 +7,6 @@ use App\Domain\Project\Entity\ProjectEntity;
 use App\Domain\Session\Entity\Requirement\SubmissionRequirements;
 use App\Domain\Session\Entity\Requirement\VotingRequirements;
 use App\Domain\Session\Entity\Requirement\WinnerRequirements;
-use App\Domain\Session\Enum\StageName;
 use App\Infrastructure\Repository\SessionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -41,8 +40,8 @@ class SessionEntity
     #[ORM\OneToMany(targetEntity: ProjectEntity::class, mappedBy: 'session', cascade: ['persist', 'remove'])]
     private Collection $projects;
 
-    /** @var Collection<Stage> */
-    #[ORM\OneToMany(targetEntity: Stage::class, mappedBy: 'session', cascade: ['persist', 'remove'])]
+    /** @var Collection<string, Stage> */
+    #[ORM\OneToMany(targetEntity: Stage::class, mappedBy: 'session', cascade: ['persist', 'remove'], indexBy: 'name')]
     private Collection $stages;
 
     public function __construct(
@@ -58,7 +57,11 @@ class SessionEntity
 
         $this->projects = new ArrayCollection();
 
-        $this->setStages($stages);
+        $this->stages = new ArrayCollection();
+        foreach ($stages as $stage) {
+            $this->addStage($stage);
+        }
+
         $this->setWinnerRequirements($winnerRequirements);
         $this->setVotingRequirements($votingRequirements);
         $this->setSubmissionRequirements($submissionRequirements);
@@ -136,42 +139,30 @@ class SessionEntity
         $submissionRequirements->setSession($this);
     }
 
-    /**
-     * @param Stage[] $stages
-     */
-    public function setStages(array $stages): void
+    public function addStage(Stage $stage): void
     {
-        $indexedStages = [];
-        foreach ($stages as $stage) {
-            $indexedStages[$stage->getName()->value] = $stage;
+        if (!$this->stages->contains($stage)) {
+            $this->stages[] = $stage;
+            $stage->setSession($this);
         }
+    }
 
-        if (!empty($diff = array_diff(StageName::VALUES, array_keys($indexedStages)))) {
-            throw new \DomainException(sprintf('The following stages are not exists: %s. Valid stages are: %s.', implode(', ', $diff), implode(', ', StageName::VALUES)));
+    public function removeStage(Stage $stage): void
+    {
+        if ($this->stages->removeElement($stage)) {
+            if ($stage->getSession() === $this) {
+                $stage->setSession(null);
+            }
         }
+    }
 
-        $previousStage = null;
-        foreach (StageName::VALUES as $stageValue) {
-            if (!array_key_exists($stageValue, $indexedStages)) {
-                throw new \DomainException(sprintf('Session stage "%s" not found in indexed stages.', $stageValue));
-            }
+    public function getStartDate(): \DateTime
+    {
+        return $this->stages->first()->getStartDate();
+    }
 
-            $stage = $indexedStages[$stageValue];
-
-            // Check if the previous stage ended before the current stage starts
-            if ($previousStage && $previousStage->getEndDate() >= $stage->getStartDate()) {
-                throw new \DomainException(sprintf('The previous session stage "%s" must end before the start of the current stage "%s".', $previousStage->getName()->value, $stage->getName()->value));
-            }
-
-            // Validate that the start date is before the end date
-            if ($stage->getStartDate() >= $stage->getEndDate()) {
-                throw new \DomainException(sprintf('Invalid date range for stage "%s": start date "%s" must be earlier than end date "%s".', $stage->getName()->value, $stage->getStartDate()->format('Y-m-d'), $stage->getEndDate()->format('Y-m-d')));
-            }
-
-            // Update the previous stage
-            $previousStage = $stage;
-        }
-
-        $this->stages = new ArrayCollection(array_values($indexedStages));
+    public function getEndDate(): \DateTime
+    {
+        return $this->stages->last()->getEndDate();
     }
 }

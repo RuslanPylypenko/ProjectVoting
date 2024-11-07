@@ -7,7 +7,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table('session_stages')]
+#[ORM\Table(name: 'session_stages', uniqueConstraints: [
+    new ORM\UniqueConstraint(name: 'unique_name_session', columns: ['name', 'session_id']),
+])]
 class Stage
 {
     #[ORM\Id]
@@ -23,6 +25,10 @@ class Stage
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private \DateTime $endDate;
+
+    #[ORM\ManyToOne(targetEntity: SessionEntity::class, inversedBy: 'stages')]
+    #[ORM\JoinColumn(name: 'session_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?SessionEntity $session = null;
 
     public function __construct(StageName $name, \DateTime $startDate, \DateTime $endDate)
     {
@@ -58,5 +64,17 @@ class Stage
     public function isActive(\DateTime $date): bool
     {
         return $this->startDate <= $date || $this->endDate >= $date;
+    }
+
+    public function getSession(): ?SessionEntity
+    {
+        return $this->session;
+    }
+
+    public function setSession(?SessionEntity $session): self
+    {
+        $this->session = $session;
+
+        return $this;
     }
 }

@@ -10,10 +10,15 @@ use App\Domain\Session\Entity\Requirement\WinnerRequirements;
 use App\Domain\Session\Entity\SessionEntity;
 use App\Domain\Session\Entity\Stage;
 use App\Domain\Session\Enum\StageName;
+use App\Domain\Session\Validator\StagesValidator;
 use Money\Money;
 
 class SessionFactory
 {
+    public function __construct(private StagesValidator $stagesValidator)
+    {
+    }
+
     public function create(CreateSessionCommand $command, CityEntity $city): SessionEntity
     {
         $submissionRequirements = new SubmissionRequirements(
@@ -40,6 +45,8 @@ class SessionFactory
             new \DateTime($stage['start_date']),
             new \DateTime($stage['end_date']),
         ), $command->stages);
+
+        $this->stagesValidator->validate($stages);
 
         return new SessionEntity(
             $command->name,
