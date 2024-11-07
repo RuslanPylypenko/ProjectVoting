@@ -24,8 +24,8 @@ class CustomAddressLocator implements AddressLocatorInterface
         }
 
         return new Address(
-            'Kyiv',
-            'Ukraine',
+            'Київ',
+            'Україна',
             $payload['street'],
             '01102',
             null,

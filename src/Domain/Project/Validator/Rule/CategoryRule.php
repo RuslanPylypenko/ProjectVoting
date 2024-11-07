@@ -11,12 +11,15 @@ class CategoryRule implements ProjectRulesInterface
     {
     }
 
+    /**
+     * @throws ProjectRuleValidationException
+     */
     public function validate(ProjectEntity $project): void
     {
         if (in_array($project->getCategory()->value, $this->categoryIds)) {
             return;
         }
 
-        throw new ProjectRuleValidationException('Category is not valid');
+        throw new ProjectRuleValidationException(sprintf('The category "%s" is not valid. Allowed categories are: %s.', $project->getCategory()->value, implode(', ', $this->categoryIds)));
     }
 }

@@ -17,18 +17,13 @@ class MoneyType extends Type
         return 'VARCHAR(255)';
     }
 
-    /**
-     * @throws UnknownCurrencyException
-     */
     public function convertToPHPValue($value, AbstractPlatform $platform): ?Money
     {
         if (null === $value) {
             return null;
         }
 
-        [$amount, $currency] = explode(' ', $value);
-
-        return new Money((float) $amount, new Currency($currency));
+        return Money::USD($value);
     }
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
@@ -41,7 +36,7 @@ class MoneyType extends Type
             throw new \InvalidArgumentException('Value must be an instance of "Money".');
         }
 
-        return $value->getAmount().' '.$value->getCurrency()->getName();
+        return $value->getAmount();
     }
 
     public function getName(): string

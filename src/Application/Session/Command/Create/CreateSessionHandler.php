@@ -8,12 +8,11 @@ use App\Domain\Session\Factory\SessionFactory;
 use App\Domain\User\Entity\UserEntity;
 use App\Infrastructure\Repository\SessionRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-class CreateSessionHandler extends AbstractController
+class CreateSessionHandler
 {
     public function __construct(
         private EntityManagerInterface $entityManager,

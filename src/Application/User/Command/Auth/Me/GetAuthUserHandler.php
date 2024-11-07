@@ -4,26 +4,24 @@ namespace App\Application\User\Command\Auth\Me;
 
 use App\Domain\User\DTO\UserDTO;
 use App\Domain\User\Entity\UserEntity;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-class GetAuthUserHandler extends AbstractController
+class GetAuthUserHandler
 {
     #[Route('/users/me', methods: ['GET'])]
-    public function hanlde(): Response
+    public function hanlde(#[CurrentUser] ?UserEntity $userEntity): Response
     {
-        /** @var UserEntity $user */
-        $user = $this->getUser();
-        if (null === $user) {
+        if (null === $userEntity) {
             return $this->json([
                 'error' => 'missing credentials',
             ], Response::HTTP_UNAUTHORIZED);
         }
 
         return new JsonResponse([
-            'user' => UserDTO::fromEntity($user),
+            'user' => UserDTO::fromEntity($userEntity),
         ]);
     }
 }

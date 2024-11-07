@@ -7,9 +7,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'session_stages', uniqueConstraints: [
-    new ORM\UniqueConstraint(name: 'unique_name_session', columns: ['name', 'session_id']),
-])]
+#[ORM\Table(name: 'session_stages')]
+#[ORM\UniqueConstraint(name: 'unique_name_session', columns: ['name', 'session_id'])]
 class Stage
 {
     #[ORM\Id]

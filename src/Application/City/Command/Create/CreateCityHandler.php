@@ -7,12 +7,11 @@ use App\Domain\City\Entity\CityEntity;
 use App\Domain\Shared\Address\Address;
 use App\Domain\User\Entity\UserEntity;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-class CreateCityHandler extends AbstractController
+class CreateCityHandler
 {
     public function __construct(
         private EntityManagerInterface $entityManager,

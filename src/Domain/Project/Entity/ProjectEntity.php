@@ -8,6 +8,7 @@ use App\Domain\Shared\Address\Address;
 use App\Domain\Shared\Enum\Category;
 use App\Domain\User\Entity\UserEntity;
 use App\Domain\Vote\Entity\VoteEntity;
+use App\Infrastructure\Doctrine\Type\MoneyType;
 use App\Infrastructure\Repository\ProjectsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -37,13 +38,13 @@ class ProjectEntity
     #[ORM\Embedded(class: Address::class, columnPrefix: 'address_')]
     private Address $address;
 
-    #[ORM\Column(type: Types::DECIMAL)]
+    #[ORM\Column(type: MoneyType::MONEY)]
     private Money $budget;
 
-    #[ORM\Column(type: Types::SMALLINT, options: ['unsigned' => true])]
+    #[ORM\Column(type: Types::SMALLINT, enumType: Category::class, options: ['unsigned' => true])]
     private Category $category;
 
-    #[ORM\Column(type: Types::SMALLINT, options: ['unsigned' => true])]
+    #[ORM\Column(type: Types::SMALLINT, enumType: ProjectStatus::class, options: ['unsigned' => true])]
     private ProjectStatus $status;
 
     #[ORM\ManyToOne(targetEntity: UserEntity::class)]
