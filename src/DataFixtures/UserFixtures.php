@@ -30,10 +30,10 @@ class UserFixtures extends Fixture
         for ($i = 1; $i <= 10; ++$i) {
             $user = new UserEntity(
                 $faker->firstName,
-                random_int(111, 999).$faker->boolean() ? $faker->email : $faker->freeEmail,
+                random_int(111, 999) . $faker->boolean() ? $faker->email : $faker->freeEmail,
                 'password',
-                new Address('Київ', 'Україна', 'вул. Центральна', '19422', '11'),
-                new Address('Київ', 'Україна', 'вул. Центральна', '19422', '11'),
+                $address = new Address($faker->randomElement(['Київ', 'Львів']), 'Україна', 'вул. Центральна', '19422', '11'),
+                $address,
                 $faker->dateTimeBetween('-50 years', '-10 years')
             );
             $manager->persist($user);

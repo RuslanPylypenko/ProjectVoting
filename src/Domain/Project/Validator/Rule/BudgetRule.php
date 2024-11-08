@@ -14,10 +14,17 @@ class BudgetRule implements ProjectRulesInterface
 
     public function validate(ProjectEntity $project): void
     {
-        if ($project->getBudget()->greaterThan($this->minBudget) || $project->getBudget()->lessThan($this->maxBudget)) {
+        if ($project->getBudget()->lessThan($this->maxBudget) && $project->getBudget()->greaterThan($this->minBudget)) {
             return;
         }
 
-        throw new ProjectRuleValidationException('Budget must be greater than the minimum budget and less than the maximum budget');
+        throw new ProjectRuleValidationException(
+            sprintf(
+                'The budget of %s is not within the allowed range. It must be between %s and %s.',
+                $project->getBudget()->getAmount(),
+                $this->minBudget->getAmount(),
+                $this->maxBudget->getAmount()
+            )
+        );
     }
 }

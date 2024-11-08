@@ -28,6 +28,7 @@ class ProjectFactory
             $command->description,
             Category::from($command->category),
             $this->addressLocator->findAddress([
+                'city' => $session->getCity()->getTitle(),
                 'street' => $command->street,
                 'houseNumber' => $command->houseNumber,
             ]),
