@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Repository;
 
 use App\Domain\Project\Entity\ProjectEntity;
+use App\Domain\Session\Entity\SessionEntity;
 use App\Domain\User\Exception\UserNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -24,5 +25,15 @@ class ProjectsRepository extends ServiceEntityRepository
         } catch (UserNotFoundException) {
             return null;
         }
+    }
+
+    public function getBySession(SessionEntity $session): array
+    {
+        return [];
+    }
+
+    public function findVoting(SessionEntity $session): array
+    {
+        return [];
     }
 }

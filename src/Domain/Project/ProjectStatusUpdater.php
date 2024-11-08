@@ -6,6 +6,7 @@ use App\Domain\Project\Entity\ProjectEntity;
 use App\Domain\Project\Enum\ProjectStatus;
 use App\Domain\Session\Entity\SessionEntity;
 use App\Domain\Session\Enum\StageName;
+use App\Infrastructure\Repository\ProjectsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ProjectStatusUpdater
@@ -13,6 +14,7 @@ class ProjectStatusUpdater
     public function __construct(
         private EntityManagerInterface $em,
         private WinnerDetector $winnerDetector,
+        private ProjectsRepository $projectsRepository,
     ) {
     }
 
@@ -26,7 +28,7 @@ class ProjectStatusUpdater
 
     private function processVotingStage(SessionEntity $session, \DateTime $day): void
     {
-        $projects = $session->getProjects();
+        $projects = $this->projectsRepository->getBySession($session);
 
         foreach ($projects as $project) {
             match (true) {
@@ -42,7 +44,7 @@ class ProjectStatusUpdater
 
     private function processWinnerStage(SessionEntity $session): void
     {
-        $votingProjects = $session->getProjects()->filter(static fn (ProjectEntity $p) => $p->isVoting());
+        $votingProjects = $this->projectsRepository->findVoting($session);
 
         /** @var ProjectEntity $project */
         foreach ($votingProjects as $project) {

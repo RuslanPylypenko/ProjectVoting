@@ -28,7 +28,7 @@ class CityEntity
     private Address $address;
 
     /** @var Collection<SessionEntity> */
-    #[ORM\OneToMany(targetEntity: SessionEntity::class, mappedBy: 'city', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: SessionEntity::class, mappedBy: 'city')]
     private Collection $sessions;
 
     // =============================================
