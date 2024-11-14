@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Application\Project\Command\Submit\SubmitProjectCommand;
 use App\Domain\Project\Factory\ProjectFactory;
 use App\Domain\Session\Entity\SessionEntity;
+use App\Domain\Session\Entity\Stage;
 use App\Domain\User\Entity\UserEntity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -58,7 +59,9 @@ class ProjectFixtures extends Fixture implements DependentFixtureInterface
                         $command->street = 'вул. '.$faker->streetName;
                         $command->description = $faker->realText(random_int(300, 1000));
 
-                        $project = $this->projectFactory->create($command, $faker->randomElement($users), $session);
+                        $submission = $session->getStages()->findFirst(fn (string $value, Stage $stage) => $stage->isSubmission());
+
+                        $project = $this->projectFactory->create($command, $faker->randomElement($users), $session, $submission->getStartDate());
 
                         $manager->persist($project);
                     }

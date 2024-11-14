@@ -28,7 +28,7 @@ class UserFixtures extends Fixture
             $manager->persist($user);
         }
 
-        for ($i = 1; $i <= 10; ++$i) {
+        for ($i = 1; $i <= 50; ++$i) {
             $user = new UserEntity(
                 $faker->firstName,
                 random_int(111, 999) . $faker->boolean() ? $faker->email : $faker->freeEmail,

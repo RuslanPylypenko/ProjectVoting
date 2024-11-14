@@ -33,11 +33,12 @@ class VoteEntity
     public function __construct(
         ProjectEntity $project,
         UserEntity $user,
+        ?\DateTime $createdAt = null,
     ) {
         $this->project = $project;
         $this->user = $user;
 
-        $this->createdAt = new \DateTime();
+        $this->createdAt = $createdAt ?? new \DateTime();
     }
 
     public function getProject(): ProjectEntity

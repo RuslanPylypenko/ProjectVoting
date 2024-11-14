@@ -52,6 +52,9 @@ class ProjectEntity
     #[ORM\OneToMany(targetEntity: VoteEntity::class, mappedBy: 'project')]
     private Collection $votes;
 
+    #[ORM\OneToMany(targetEntity: ProjectHistoryEntity::class, mappedBy: 'project', cascade: ['persist'])]
+    private Collection $history;
+
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $rejectedReason = null;
 
@@ -75,7 +78,9 @@ class ProjectEntity
         Money $budget,
         UserEntity $author,
         SessionEntity $session,
-    ) {
+        ?\DateTime $submissionDate = null,
+    )
+    {
         $this->description = $description;
         $this->title = $title;
         $this->author = $author;
@@ -86,11 +91,12 @@ class ProjectEntity
         $this->session = $session;
 
         $this->votes = new ArrayCollection();
+        $this->history = new ArrayCollection();
 
         $this->status = ProjectStatus::PENDING;
 
-        $this->createdAt = $now = new \DateTime();
-        $this->updatedAt = $now;
+        $submissionDate = $submissionDate ?? new \DateTime();
+        $this->createdAt = $this->updatedAt = $submissionDate;
     }
 
     // =============================================
@@ -262,6 +268,15 @@ class ProjectEntity
         }
 
         $this->status = $status;
+    }
+
+    public function addHistory(ProjectHistoryEntity $history): void
+    {
+        $this->history->add($history);
+
+        if (!$history->getProject()) {
+            $history->setProject($this);
+        }
     }
 
     // =============================================

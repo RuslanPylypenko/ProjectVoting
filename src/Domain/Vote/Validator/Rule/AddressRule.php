@@ -16,7 +16,7 @@ class AddressRule implements VotingRuleInterface
         $livingAddress = $vote->getUser()->getLivingAddress();
         $registrationAddress = $vote->getUser()->getRegistrationAddress();
 
-        if ($livingAddress->isSameCity($registrationAddress) || $registrationAddress->isSameCity($requiredAddress)) {
+        if (!$livingAddress->isSameCity($registrationAddress) || !$registrationAddress->isSameCity($requiredAddress)) {
             throw new VoteRuleValidationException('Project address does not match the required address criteria.');
         }
     }

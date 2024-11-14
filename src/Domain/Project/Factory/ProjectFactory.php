@@ -4,6 +4,7 @@ namespace App\Domain\Project\Factory;
 
 use App\Application\Project\Command\Submit\SubmitProjectCommand;
 use App\Domain\Project\Entity\ProjectEntity;
+use App\Domain\Project\Entity\ProjectHistoryEntity;
 use App\Domain\Project\Validator\ProjectValidator;
 use App\Domain\Project\Validator\Rule\RuleFactory;
 use App\Domain\Session\Entity\SessionEntity;
@@ -21,7 +22,7 @@ class ProjectFactory
     ) {
     }
 
-    public function create(SubmitProjectCommand $command, UserEntity $user, SessionEntity $session): ProjectEntity
+    public function create(SubmitProjectCommand $command, UserEntity $user, SessionEntity $session, ?\DateTime $submissionDate = null): ProjectEntity
     {
         $project = new ProjectEntity(
             $command->title,
@@ -35,12 +36,15 @@ class ProjectFactory
             Money::USD($command->budget),
             $user,
             $session,
+            $submissionDate
         );
 
         $this->projectValidator->validate(
             $project,
             $this->ruleFactory->createRulesForSubmission($session)
         );
+
+        $project->addHistory(ProjectHistoryEntity::createAction($user));
 
         return $project;
     }

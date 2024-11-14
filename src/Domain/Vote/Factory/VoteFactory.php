@@ -17,12 +17,9 @@ class VoteFactory
     ) {
     }
 
-    public function createVote(UserEntity $user, ProjectEntity $project, SessionEntity $session): VoteEntity
+    public function createVote(UserEntity $user, ProjectEntity $project, SessionEntity $session, ?\DateTime $votingDate = null): VoteEntity
     {
-        $vote = new VoteEntity(
-            project: $project,
-            user: $user
-        );
+        $vote = new VoteEntity($project, $user, $votingDate);
 
         $this->votingValidator->validate(
             $vote,

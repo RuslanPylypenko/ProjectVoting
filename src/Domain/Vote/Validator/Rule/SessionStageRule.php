@@ -8,14 +8,13 @@ use App\Domain\Vote\Entity\VoteEntity;
 
 class SessionStageRule implements VotingRuleInterface
 {
-    public function __construct(private SessionEntity $session, private ?\DateTime $voteDate = null)
+    public function __construct(private SessionEntity $session)
     {
     }
 
     public function validate(VoteEntity $vote): void
     {
-        $date = $this->voteDate ?? new \DateTime();
-        $stage = $this->session->getActiveStage($date);
+        $stage = $this->session->getActiveStage($vote->getCreatedAt());
 
         if (!$stage->isVoting()) {
             throw new VoteRuleValidationException(sprintf('User can only vote during the voting stage. The current stage is: %s.', $this->session->getActiveStage()->getName()->value));
