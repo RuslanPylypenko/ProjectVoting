@@ -24,7 +24,6 @@ class SessionEntity
     private string $name;
 
     #[ORM\ManyToOne(targetEntity: CityEntity::class, inversedBy: 'sessions')]
-    #[ORM\JoinColumn(name: 'city_id', referencedColumnName: 'id', nullable: false)]
     private CityEntity $city;
 
     #[ORM\OneToOne(targetEntity: WinnerRequirements::class, mappedBy: 'session', cascade: ['persist'])]
@@ -37,7 +36,7 @@ class SessionEntity
     private VotingRequirements $votingRequirements;
 
     /** @var Collection<string, Stage> */
-    #[ORM\OneToMany(targetEntity: Stage::class, mappedBy: 'session', cascade: ['persist', 'remove'], indexBy: 'name')]
+    #[ORM\OneToMany(targetEntity: Stage::class, mappedBy: 'session', cascade: ['persist'], indexBy: 'name')]
     private Collection $stages;
 
     public function __construct(
@@ -91,8 +90,9 @@ class SessionEntity
         return $this->stages;
     }
 
-    public function getActiveStage(\DateTime $date): Stage
+    public function getActiveStage(?\DateTime $date = null): Stage
     {
+        $date = $date ?? new \DateTime();
         foreach ($this->stages as $stage) {
             if ($stage->isActive($date)) {
                 return $stage;

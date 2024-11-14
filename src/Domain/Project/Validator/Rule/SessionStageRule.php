@@ -3,7 +3,7 @@
 namespace App\Domain\Project\Validator\Rule;
 
 use App\Domain\Project\Entity\ProjectEntity;
-use App\Domain\Project\Exception\ProjectRuleValidationException;
+use App\Domain\Project\Exception\VoteRuleValidationException;
 
 class SessionStageRule implements ProjectRulesInterface
 {
@@ -13,6 +13,6 @@ class SessionStageRule implements ProjectRulesInterface
             return;
         }
 
-        throw new ProjectRuleValidationException('Session must me on Submission stage');
+        throw new VoteRuleValidationException('Session must me on Submission stage');
     }
 }

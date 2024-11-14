@@ -3,7 +3,7 @@
 namespace App\Domain\Project\Validator\Rule;
 
 use App\Domain\Project\Entity\ProjectEntity;
-use App\Domain\Project\Exception\ProjectRuleValidationException;
+use App\Domain\Project\Exception\VoteRuleValidationException;
 
 class CategoryRule implements ProjectRulesInterface
 {
@@ -12,7 +12,7 @@ class CategoryRule implements ProjectRulesInterface
     }
 
     /**
-     * @throws ProjectRuleValidationException
+     * @throws VoteRuleValidationException
      */
     public function validate(ProjectEntity $project): void
     {
@@ -20,6 +20,6 @@ class CategoryRule implements ProjectRulesInterface
             return;
         }
 
-        throw new ProjectRuleValidationException(sprintf('The category "%s" is not valid. Allowed categories are: %s.', $project->getCategory()->value, implode(', ', $this->categoryIds)));
+        throw new VoteRuleValidationException(sprintf('The category "%s" is not valid. Allowed categories are: %s.', $project->getCategory()->value, implode(', ', $this->categoryIds)));
     }
 }

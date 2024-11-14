@@ -60,9 +60,14 @@ class Stage
         return StageName::SUBMISSION === $this->name;
     }
 
+    public function isVoting(): bool
+    {
+        return StageName::VOTING === $this->name;
+    }
+
     public function isActive(\DateTime $date): bool
     {
-        return $this->startDate <= $date || $this->endDate >= $date;
+        return $this->startDate <= $date && $this->endDate >= $date;
     }
 
     public function getSession(): ?SessionEntity

@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Domain\Project\Validator\Rule;
+namespace App\Domain\Vote\Validator\Rule;
 
-use App\Domain\Project\Entity\ProjectEntity;
 use App\Domain\Project\Exception\VoteRuleValidationException;
+use App\Domain\Vote\Entity\VoteEntity;
 
-class AgeRule implements ProjectRulesInterface
+class AgeRule implements VotingRuleInterface
 {
     public function __construct(private int $minAge = 18)
     {
     }
 
-    public function validate(ProjectEntity $project): void
+    public function validate(VoteEntity $vote): void
     {
-        if ($project->getAuthor()->getAge() >= $this->minAge) {
+        if ($vote->getUser()->getAge() >= $this->minAge) {
             return;
         }
 

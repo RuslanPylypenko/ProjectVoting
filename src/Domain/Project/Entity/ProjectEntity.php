@@ -31,8 +31,7 @@ class ProjectEntity
     #[ORM\Column(type: Types::TEXT)]
     private string $description;
 
-    #[ORM\ManyToOne(targetEntity: SessionEntity::class)]
-    #[ORM\JoinColumn(name: 'session_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne]
     private SessionEntity $session;
 
     #[ORM\Embedded(class: Address::class, columnPrefix: 'address_')]
@@ -41,14 +40,13 @@ class ProjectEntity
     #[ORM\Column(type: MoneyType::MONEY)]
     private Money $budget;
 
-    #[ORM\Column(type: Types::SMALLINT, enumType: Category::class, options: ['unsigned' => true])]
+    #[ORM\Column(type: Types::STRING, enumType: Category::class)]
     private Category $category;
 
     #[ORM\Column(type: Types::SMALLINT, enumType: ProjectStatus::class, options: ['unsigned' => true])]
     private ProjectStatus $status;
 
-    #[ORM\ManyToOne(targetEntity: UserEntity::class)]
-    #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne]
     private UserEntity $author;
 
     #[ORM\OneToMany(targetEntity: VoteEntity::class, mappedBy: 'project')]
@@ -57,8 +55,7 @@ class ProjectEntity
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $rejectedReason = null;
 
-    #[ORM\ManyToOne(targetEntity: UserEntity::class)]
-    #[ORM\JoinColumn(name: 'rejected_by_id', referencedColumnName: 'id', nullable: true)]
+    #[ORM\ManyToOne]
     private ?UserEntity $rejectedBy = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]

@@ -23,7 +23,7 @@ class CityResolver implements ValueResolverInterface
             return [];
         }
 
-        $city = $this->em->getRepository(CityEntity::class)->findOneBy(['slug' => 'Kyiv']);
+        $city = $this->em->getRepository(CityEntity::class)->findOneBy(['slug' => 'kyiv']);
 
         if (null === $city) {
             throw new \RuntimeException('City not found');

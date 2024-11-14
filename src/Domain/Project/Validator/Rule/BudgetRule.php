@@ -3,7 +3,7 @@
 namespace App\Domain\Project\Validator\Rule;
 
 use App\Domain\Project\Entity\ProjectEntity;
-use App\Domain\Project\Exception\ProjectRuleValidationException;
+use App\Domain\Project\Exception\VoteRuleValidationException;
 use Money\Money;
 
 class BudgetRule implements ProjectRulesInterface
@@ -18,7 +18,7 @@ class BudgetRule implements ProjectRulesInterface
             return;
         }
 
-        throw new ProjectRuleValidationException(
+        throw new VoteRuleValidationException(
             sprintf(
                 'The budget of %s is not within the allowed range. It must be between %s and %s.',
                 $project->getBudget()->getAmount(),
