@@ -6,6 +6,7 @@ use App\Domain\Project\Entity\ProjectEntity;
 use App\Domain\Session\Entity\SessionEntity;
 use App\Domain\User\Exception\UserNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -25,6 +26,41 @@ class ProjectsRepository extends ServiceEntityRepository
         } catch (UserNotFoundException) {
             return null;
         }
+    }
+
+    public function list(): array
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->setMaxResults(100);
+
+        return $qb->getQuery()->getArrayResult();
+    }
+
+    public function randomProjects(SessionEntity $session, $limit = 10): array
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->where('p.session = :sessionId')
+            ->select('p AS project', 'COUNT(v.id) AS votes')
+            ->leftJoin('p.votes', 'v')
+            ->groupBy('p.id')
+            ->setParameter('sessionId', $session->getId())
+            ->orderBy('RAND()')
+            ->setMaxResults($limit);
+
+        return $qb->getQuery()->getArrayResult();
+    }
+
+    public function getTopProjectsQuery(SessionEntity $session, int $limit = 10): Query
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p AS project', 'COUNT(v.id) AS votes')
+            ->leftJoin('p.votes', 'v')
+            ->where('p.session = :sessionId')
+            ->setParameter('sessionId', $session->getId())
+            ->groupBy('p.id')
+            ->orderBy('COUNT(v.id)', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery();
     }
 
     public function getBySession(SessionEntity $session): array

@@ -3,11 +3,12 @@
 namespace App\Domain\Project;
 
 use App\Domain\Project\Entity\ProjectEntity;
+use App\Infrastructure\Repository\ProjectsRepository;
 use App\Infrastructure\Repository\SessionRepository;
 
 class WinnerDetector
 {
-    public function __construct(private SessionRepository $sessionRepository)
+    public function __construct(private ProjectsRepository $projectsRepository)
     {
     }
 
@@ -19,7 +20,7 @@ class WinnerDetector
             return false;
         }
 
-        $topProjects = $this->sessionRepository->findTopProjects($session, $session->getWinnerRequirements()->getMaxWinners());
+        $topProjects = $this->projectsRepository->getTopProjectsQuery($session, $session->getWinnerRequirements()->getMaxWinners())->getResult();
 
         foreach ($topProjects as $projectInfo) {
             if ($project->getId() === $projectInfo->getId()) {

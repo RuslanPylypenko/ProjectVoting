@@ -65,8 +65,9 @@ class Stage
         return StageName::VOTING === $this->name;
     }
 
-    public function isActive(\DateTime $date): bool
+    public function isActive(?\DateTime $date = null): bool
     {
+        $date = $date ?? new \DateTime();
         return $this->startDate <= $date && $this->endDate >= $date;
     }
 
