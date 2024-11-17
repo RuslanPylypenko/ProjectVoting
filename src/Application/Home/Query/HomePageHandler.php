@@ -23,8 +23,8 @@ class HomePageHandler
         return new JsonResponse([
             'city' => CityDto::fromEntity($city),
             'session' => SessionDTO::fromEntity($session = $city->getCurrentSession()),
-            'random_projects' => array_map(fn (array $row) => ProjectCardDTO::createFromArray($row), $this->projectsRepository->randomProjects($session)),
-            'top_projects' => array_map(fn (array $row) => ProjectCardDTO::createFromArray($row), $this->projectsRepository->getTopProjectsQuery($session)->getArrayResult()),
+            'random_projects' => array_map(fn (array $row) => ProjectCardDTO::createFromArray($row), $this->projectsRepository->getRandomProjects($session)),
+            'top_projects' => array_map(fn (array $row) => ProjectCardDTO::createFromArray($row), $this->projectsRepository->getTopProjectsArray($session)),
         ]);
     }
 }

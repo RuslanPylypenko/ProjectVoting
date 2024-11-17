@@ -36,7 +36,7 @@ class ProjectsRepository extends ServiceEntityRepository
         return $qb->getQuery()->getArrayResult();
     }
 
-    public function randomProjects(SessionEntity $session, $limit = 10): array
+    public function getRandomProjects(SessionEntity $session, $limit = 10): array
     {
         $qb = $this->createQueryBuilder('p');
         $qb->where('p.session = :sessionId')
@@ -50,7 +50,7 @@ class ProjectsRepository extends ServiceEntityRepository
         return $qb->getQuery()->getArrayResult();
     }
 
-    public function getTopProjectsQuery(SessionEntity $session, int $limit = 10): Query
+    public function getTopProjectsArray(SessionEntity $session, int $limit = 10): array
     {
         return $this->createQueryBuilder('p')
             ->select('p AS project', 'COUNT(v.id) AS votes')
@@ -60,7 +60,23 @@ class ProjectsRepository extends ServiceEntityRepository
             ->groupBy('p.id')
             ->orderBy('COUNT(v.id)', 'DESC')
             ->setMaxResults($limit)
-            ->getQuery();
+            ->getQuery()->getArrayResult();
+    }
+
+    /**
+     * @return ProjectEntity[]
+     */
+    public function getTopProjects(SessionEntity $session, int $limit = 10): array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p AS project', 'COUNT(v.id) AS votes')
+            ->leftJoin('p.votes', 'v')
+            ->where('p.session = :sessionId')
+            ->setParameter('sessionId', $session->getId())
+            ->groupBy('p.id')
+            ->orderBy('COUNT(v.id)', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()->getResult();
     }
 
     public function getBySession(SessionEntity $session): array
