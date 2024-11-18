@@ -25,7 +25,7 @@ class Stage
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private \DateTime $endDate;
 
-    #[ORM\ManyToOne(targetEntity: SessionEntity::class, inversedBy: 'stages')]
+    #[ORM\ManyToOne(targetEntity: SessionEntity::class, cascade: ['persist'], inversedBy: 'stages')]
     #[ORM\JoinColumn(name: 'session_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private ?SessionEntity $session = null;
 

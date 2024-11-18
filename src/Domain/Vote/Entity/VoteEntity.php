@@ -17,13 +17,13 @@ class VoteEntity
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: ProjectEntity::class, inversedBy: 'votes')]
+    #[ORM\ManyToOne(targetEntity: ProjectEntity::class, cascade: ['persist'], inversedBy: 'votes')]
     #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false)]
     private readonly ProjectEntity $project;
 
-    #[ORM\ManyToOne(targetEntity: UserEntity::class, inversedBy: 'votes')]
+    #[ORM\ManyToOne(targetEntity: UserEntity::class, inversedBy: 'votes', cascade: ['persist'])]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
-    private readonly UserEntity $user;
+    private UserEntity $user;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private \DateTime $createdAt;
@@ -35,8 +35,8 @@ class VoteEntity
         UserEntity $user,
         ?\DateTime $createdAt = null,
     ) {
-        $this->project = $project;
         $this->user = $user;
+        $this->setProject($project);
 
         $this->createdAt = $createdAt ?? new \DateTime();
     }
@@ -55,4 +55,11 @@ class VoteEntity
     {
         return $this->createdAt;
     }
+
+    public function setProject(ProjectEntity $project): void
+    {
+        $this->project = $project;
+        $project->addVote($this);
+    }
+
 }

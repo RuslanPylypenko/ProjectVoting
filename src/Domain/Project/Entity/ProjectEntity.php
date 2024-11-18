@@ -31,7 +31,7 @@ class ProjectEntity
     #[ORM\Column(type: Types::TEXT)]
     private string $description;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne()]
     private SessionEntity $session;
 
     #[ORM\Embedded(class: Address::class, columnPrefix: 'address_')]
@@ -49,7 +49,7 @@ class ProjectEntity
     #[ORM\ManyToOne]
     private UserEntity $author;
 
-    #[ORM\OneToMany(targetEntity: VoteEntity::class, mappedBy: 'project')]
+    #[ORM\OneToMany(targetEntity: VoteEntity::class, mappedBy: 'project', cascade: ['persist'])]
     private Collection $votes;
 
     #[ORM\OneToMany(targetEntity: ProjectHistoryEntity::class, mappedBy: 'project', cascade: ['persist'])]

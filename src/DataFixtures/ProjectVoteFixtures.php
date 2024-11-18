@@ -15,13 +15,19 @@ use Faker\Factory;
 
 class ProjectVoteFixtures extends Fixture implements DependentFixtureInterface
 {
-    public function __construct(private VoteFactory $voteFactory)
+    public function __construct(private VoteFactory $voteFactory, private RandomUsers $randomUsers)
     {
     }
 
     public function load(ObjectManager $manager): void
     {
-        $sessions = $manager->getRepository(SessionEntity::class)->findAll();
+        ini_set('memory_limit', '512M');
+
+        $faker = Factory::create('uk_UA');
+        $sessions = $manager->getRepository(SessionEntity::class)
+            ->createQueryBuilder('s')
+            ->getQuery()
+            ->toIterable();
 
         $totalUsers = $manager->createQueryBuilder()
             ->select('count(u.id)')
@@ -30,7 +36,7 @@ class ProjectVoteFixtures extends Fixture implements DependentFixtureInterface
             ->getSingleScalarResult();
 
         foreach ($sessions as $session) {
-            $users = $this->getRandomUsers($manager, $totalUsers, $session);
+            $users = $this->randomUsers->get($manager, $session, random_int(10, $totalUsers));
 
             /** @var Stage $voting */
             $voting = $session->getStages()->findFirst(fn (string $value, Stage $stage) => $stage->isVoting());
@@ -39,38 +45,32 @@ class ProjectVoteFixtures extends Fixture implements DependentFixtureInterface
                 ->createQueryBuilder('p')
                 ->where('p.session = :sessionId')
                 ->setParameter('sessionId', $session->getId())
-                ->getQuery();
+                ->getQuery()
+                ->toIterable();
 
-            foreach ($projects->toIterable() as $project) {
-                foreach ($users as $user) {
+
+            foreach ($projects as $project) {
+                $votes = [];
+                foreach ($faker->randomElements($users, random_int(0, count($users))) as $user) {
                     $vote = $this->voteFactory->createVote($user, $project, $session, $voting->getStartDate());
                     $manager->persist($vote);
+
+                    $votes[] = $vote;
                 }
 
                 $manager->flush();
+                foreach ($votes as $vote) {
+                    $manager->detach($vote);
+                }
+
+                $manager->detach($project);
             }
+            $manager->detach($session);
         }
+
+        $manager->flush();
     }
 
-    /**
-     * @return UserEntity[]
-     */
-    private function getRandomUsers(ObjectManager $manager, int $totalUsers, SessionEntity $session): array
-    {
-        $limit = 100;
-        $randomOffset = rand(0, max(0, $totalUsers - $limit));
-
-        $query = $manager->createQueryBuilder()
-            ->select('u')
-            ->from(UserEntity::class, 'u')
-            ->where('u.livingAddress.city = :livingCity')
-            ->setParameter('livingCity', $session->getCity()->getTitle())
-            ->setFirstResult($randomOffset)
-            ->setMaxResults($limit)
-            ->getQuery();
-
-        return $query->getResult();
-    }
 
     public function getDependencies(): array
     {

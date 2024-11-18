@@ -14,7 +14,7 @@ use Faker\Factory;
 
 class ProjectFixtures extends Fixture implements DependentFixtureInterface
 {
-    public function __construct(private ProjectFactory $projectFactory)
+    public function __construct(private ProjectFactory $projectFactory, private RandomUsers $randomUsers)
     {
     }
 
@@ -46,11 +46,11 @@ class ProjectFixtures extends Fixture implements DependentFixtureInterface
                 foreach ($sessions as $session) {
                     $submissionRequirements = $session->getSubmissionRequirements();
 
-                    $users = $this->getRandomUsers($manager, $totalUsers, $session);
+                    $users = $this->randomUsers->get($manager, $session, random_int(100, $totalUsers));
 
                     $categories = $submissionRequirements->getCategories();
 
-                    for ($i = 1; $i <= 5; ++$i) {
+                    for ($i = 1; $i <= random_int(20, 100); ++$i) {
                         $command = new SubmitProjectCommand();
                         $command->title = $faker->words(5, true);
                         $command->budget = $faker->randomFloat(nbMaxDecimals: 2, min: $submissionRequirements->getMinBudget()->getAmount(), max: $submissionRequirements->getMaxBudget()->getAmount());
@@ -74,26 +74,6 @@ class ProjectFixtures extends Fixture implements DependentFixtureInterface
         } catch (\Exception $e) {
             throw $e;
         }
-    }
-
-    /**
-     * @return UserEntity[]
-     */
-    public function getRandomUsers(ObjectManager $manager, int $totalUsers, SessionEntity $session): array
-    {
-        $limit = 100;
-        $randomOffset = rand(0, max(0, $totalUsers - $limit));
-
-        $query = $manager->createQueryBuilder()
-            ->select('u')
-            ->from(UserEntity::class, 'u')
-            ->where('u.livingAddress.city = :livingCity')
-            ->setParameter('livingCity', $session->getCity()->getTitle())
-            ->setFirstResult($randomOffset)
-            ->setMaxResults($limit)
-            ->getQuery();
-
-        return $query->getResult();
     }
 
     public function getDependencies(): array
