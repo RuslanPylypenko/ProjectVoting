@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Domain\Shared\Address\AddressLocator;
-
-use App\Domain\Shared\Address\Address;
+namespace App\Domain\Shared\Address;
 
 interface AddressLocatorInterface
 {

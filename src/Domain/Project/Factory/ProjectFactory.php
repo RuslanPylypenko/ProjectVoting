@@ -8,7 +8,7 @@ use App\Domain\Project\Entity\ProjectHistoryEntity;
 use App\Domain\Project\Validator\ProjectValidator;
 use App\Domain\Project\Validator\Rule\RuleFactory;
 use App\Domain\Session\Entity\SessionEntity;
-use App\Domain\Shared\Address\AddressLocator\AddressLocatorInterface;
+use App\Domain\Shared\Address\AddressLocatorInterface;
 use App\Domain\Shared\Enum\Category;
 use App\Domain\User\Entity\UserEntity;
 use Money\Money;

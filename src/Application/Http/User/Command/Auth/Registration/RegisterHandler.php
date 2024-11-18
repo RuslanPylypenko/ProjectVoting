@@ -2,7 +2,7 @@
 
 namespace App\Application\Http\User\Command\Auth\Registration;
 
-use App\Domain\Shared\Address\AddressLocator\AddressLocatorInterface;
+use App\Domain\Shared\Address\AddressLocatorInterface;
 use App\Domain\User\DTO\UserDTO;
 use App\Domain\User\Entity\UserEntity;
 use App\Infrastructure\Repository\UsersRepository;
