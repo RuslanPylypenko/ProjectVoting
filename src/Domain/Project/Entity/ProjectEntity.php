@@ -200,7 +200,7 @@ class ProjectEntity
             throw new \DomainException('Status already rejected!');
         }
 
-        $this->status = ProjectStatus::REJECTED;
+        $this->setStatus(ProjectStatus::REJECTED);
         $this->rejectedReason = $reason;
         $this->rejectedBy = $by;
         $this->rejectedAt = $rejectedAt;
@@ -211,7 +211,7 @@ class ProjectEntity
         if ($this->isWinner()) {
             throw new \DomainException('Status already winner!');
         }
-        $this->status = ProjectStatus::WINNER;
+        $this->setStatus(ProjectStatus::WINNER);
     }
 
     public function notWinner(): void
@@ -219,7 +219,7 @@ class ProjectEntity
         if ($this->isNotWinner()) {
             throw new \DomainException('Status already not a winner!');
         }
-        $this->status = ProjectStatus::NOT_A_WINNER;
+        $this->setStatus(ProjectStatus::NOT_A_WINNER);
     }
 
     public function isApproved(): bool
@@ -259,13 +259,11 @@ class ProjectEntity
 
     public function setStatus(ProjectStatus $status): void
     {
-        if (in_array($status, [ProjectStatus::REJECTED, ProjectStatus::APPROVED])) {
-            throw new \InvalidArgumentException('You must use spec method');
+        if ($status === $this->status) {
+            throw new \DomainException('Status already set!');
         }
 
-        if ($status === $this->status) {
-            throw new \DomainException('Status already setted!');
-        }
+        $this->addHistory(ProjectHistoryEntity::updateAction('status', $this->status->getLabel(), $status->getLabel()));
 
         $this->status = $status;
     }

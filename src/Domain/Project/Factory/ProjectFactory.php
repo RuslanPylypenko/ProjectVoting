@@ -2,7 +2,7 @@
 
 namespace App\Domain\Project\Factory;
 
-use App\Application\Project\Command\Submit\SubmitProjectCommand;
+use App\Application\Http\Project\Command\Submit\SubmitProjectCommand;
 use App\Domain\Project\Entity\ProjectEntity;
 use App\Domain\Project\Entity\ProjectHistoryEntity;
 use App\Domain\Project\Validator\ProjectValidator;

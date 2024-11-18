@@ -62,6 +62,11 @@ class ProjectHistoryEntity
         return new self(action: ProjectAction::CREATE, initiator: $user);
     }
 
+    public static function updateAction(string $field, mixed $oldValue, mixed $newValue, ?UserEntity $user = null): static
+    {
+        return new self(action: ProjectAction::CREATE, field: $field, oldValue: $oldValue, newValue: $newValue, initiator: $user);
+    }
+
     // =============================================
 
 

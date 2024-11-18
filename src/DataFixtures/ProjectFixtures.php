@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Application\Project\Command\Submit\SubmitProjectCommand;
+use App\Application\Http\Project\Command\Submit\SubmitProjectCommand;
 use App\Domain\Project\Factory\ProjectFactory;
 use App\Domain\Session\Entity\SessionEntity;
 use App\Domain\Session\Entity\Stage;

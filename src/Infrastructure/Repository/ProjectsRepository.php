@@ -3,16 +3,16 @@
 namespace App\Infrastructure\Repository;
 
 use App\Domain\Project\Entity\ProjectEntity;
+use App\Domain\Project\ProjectRepositoryInterface;
 use App\Domain\Session\Entity\SessionEntity;
 use App\Domain\User\Exception\UserNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<ProjectEntity>
  */
-class ProjectsRepository extends ServiceEntityRepository
+class ProjectsRepository extends ServiceEntityRepository implements ProjectRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

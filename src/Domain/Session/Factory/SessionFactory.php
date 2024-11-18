@@ -2,7 +2,7 @@
 
 namespace App\Domain\Session\Factory;
 
-use App\Application\Session\Command\Create\CreateSessionCommand;
+use App\Application\Http\Session\Command\Create\CreateSessionCommand;
 use App\Domain\City\Entity\CityEntity;
 use App\Domain\Session\Entity\Requirement\SubmissionRequirements;
 use App\Domain\Session\Entity\Requirement\VotingRequirements;

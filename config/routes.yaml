@@ -1,5 +1,5 @@
 api:
-    resource: ../src/Application/**/{Command,Query}/**/*Handler.php
+    resource: ../src/Application/Http/**/{Command,Query}/**/*Handler.php
     type: attribute
     prefix: 'api'
 

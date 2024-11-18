@@ -3,6 +3,7 @@
 namespace App\Domain\Session\Entity;
 
 use App\Domain\City\Entity\CityEntity;
+use App\Domain\Project\Entity\ProjectEntity;
 use App\Domain\Session\Entity\Requirement\SubmissionRequirements;
 use App\Domain\Session\Entity\Requirement\VotingRequirements;
 use App\Domain\Session\Entity\Requirement\WinnerRequirements;
@@ -35,6 +36,9 @@ class SessionEntity
     #[ORM\OneToOne(targetEntity: VotingRequirements::class, mappedBy: 'session', cascade: ['persist'])]
     private VotingRequirements $votingRequirements;
 
+    #[ORM\OneToMany(targetEntity: ProjectEntity::class, mappedBy: 'session', fetch: 'EXTRA_LAZY')]
+    private Collection $projects;
+
     /** @var Collection<string, Stage> */
     #[ORM\OneToMany(targetEntity: Stage::class, mappedBy: 'session', cascade: ['persist'], indexBy: 'name')]
     private Collection $stages;
@@ -49,6 +53,8 @@ class SessionEntity
     ) {
         $this->city = $city;
         $this->name = $name;
+
+        $this->projects = new ArrayCollection();
 
         $this->stages = new ArrayCollection();
         foreach ($stages as $stage) {
@@ -150,5 +156,10 @@ class SessionEntity
     public function getEndDate(): \DateTime
     {
         return $this->stages->last()->getEndDate();
+    }
+
+    public function getProjects(): Collection
+    {
+        return $this->projects;
     }
 }

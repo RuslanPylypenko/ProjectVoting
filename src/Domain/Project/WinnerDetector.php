@@ -3,12 +3,10 @@
 namespace App\Domain\Project;
 
 use App\Domain\Project\Entity\ProjectEntity;
-use App\Infrastructure\Repository\ProjectsRepository;
-use App\Infrastructure\Repository\SessionRepository;
 
 class WinnerDetector
 {
-    public function __construct(private ProjectsRepository $projectsRepository)
+    public function __construct(private ProjectRepositoryInterface $projectsRepository)
     {
     }
 

@@ -4,9 +4,7 @@ namespace App\Domain\Project;
 
 use App\Domain\Project\Entity\ProjectEntity;
 use App\Domain\Project\Enum\ProjectStatus;
-use App\Domain\Session\Entity\SessionEntity;
 use App\Domain\Session\Enum\StageName;
-use App\Infrastructure\Repository\ProjectsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ProjectStatusUpdater
@@ -14,43 +12,44 @@ class ProjectStatusUpdater
     public function __construct(
         private EntityManagerInterface $em,
         private WinnerDetector $winnerDetector,
-        private ProjectsRepository $projectsRepository,
     ) {
     }
 
-    public function run(SessionEntity $session, \DateTime $day): void
+    public function update(ProjectEntity $project, ?\DateTime $date = null): void
     {
-        match ($session->getActiveStage($day)->getName()) {
-            StageName::VOTING => $this->processVotingStage($session, $day),
-            StageName::WINNER => $this->processWinnerStage($session),
+        $date = $date ?? new \DateTime();
+        $session = $project->getSession();
+
+        match ($session->getActiveStage($date)->getName()) {
+            StageName::VOTING => $this->processVotingStage($project, $date),
+            StageName::WINNER => $this->processWinnerStage($project),
+            default => null,
         };
     }
 
-    private function processVotingStage(SessionEntity $session, \DateTime $day): void
+    private function processVotingStage(ProjectEntity $project, \DateTime $date): void
     {
-        $projects = $this->projectsRepository->getBySession($session);
+        match (true) {
+            $project->isApproved() => $project->setStatus(ProjectStatus::VOTING),
+            $project->isPending() => $project->reject('The project was not reviewed by the moderator.', $date),
+            $project->inReview() => $project->reject('Project did not pass moderation', $date),
+            default => null,
+        };
 
-        foreach ($projects as $project) {
-            match (true) {
-                $project->isApproved() => $project->setStatus(ProjectStatus::VOTING),
-                $project->isPending() => $project->reject('The project was not reviewed by the moderator.', $day),
-                $project->inReview() => $project->reject('Project did not pass moderation', $day),
-            };
-
-            $this->em->persist($project);
-        }
+        $this->em->persist($project);
         $this->em->flush();
     }
 
-    private function processWinnerStage(SessionEntity $session): void
+    private function processWinnerStage(ProjectEntity $project): void
     {
-        $votingProjects = $this->projectsRepository->findVoting($session);
+        $isWinner = $this->winnerDetector->isWinner($project);
+        match (true) {
+            $isWinner => $project->winner(),
+            !$isWinner && !$project->isNotWinner() => $project->notWinner(),
+            default => null,
+        };
 
-        /** @var ProjectEntity $project */
-        foreach ($votingProjects as $project) {
-            $this->winnerDetector->isWinner($project) ? $project->winner() : $project->notWinner();
-            $this->em->persist($project);
-        }
+        $this->em->persist($project);
         $this->em->flush();
     }
 }

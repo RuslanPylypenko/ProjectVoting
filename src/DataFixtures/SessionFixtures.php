@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
-use App\Application\Session\Command\Create\CreateSessionCommand;
-use App\Application\Session\Command\Create\SubmissionRequirements;
-use App\Application\Session\Command\Create\VotingRequirements;
-use App\Application\Session\Command\Create\WinnerRequirements;
+use App\Application\Http\Session\Command\Create\CreateSessionCommand;
+use App\Application\Http\Session\Command\Create\SubmissionRequirements;
+use App\Application\Http\Session\Command\Create\VotingRequirements;
+use App\Application\Http\Session\Command\Create\WinnerRequirements;
 use App\Domain\City\Entity\CityEntity;
 use App\Domain\Session\Enum\StageName;
 use App\Domain\Session\Factory\SessionFactory;
