@@ -6,7 +6,6 @@ use App\Application\Http\Project\Command\Submit\SubmitProjectCommand;
 use App\Domain\Project\Factory\ProjectFactory;
 use App\Domain\Session\Entity\SessionEntity;
 use App\Domain\Session\Entity\Stage;
-use App\Domain\User\Entity\UserEntity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -20,59 +19,37 @@ class ProjectFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
+        ini_set('memory_limit', '1024M');
+
         $faker = Factory::create('uk_UA');
 
-        $offset = 0;
-        $batchSize = 1000;
+        /** @var SessionEntity[] $sessions */
+        $sessions = $manager->getRepository(SessionEntity::class)
+            ->createQueryBuilder('e')
+            ->getQuery()
+            ->toIterable();
 
-        //  $manager->beginTransaction();
+        foreach ($sessions as $session) {
+            $submissionRequirements = $session->getSubmissionRequirements();
+            $users = $this->randomUsers->get($manager, $session->getCity(), 1000);
+            $categories = $submissionRequirements->getCategories();
 
-        try {
-            do {
-                /** @var SessionEntity[] $sessions */
-                $sessions = $manager->getRepository(SessionEntity::class)
-                    ->createQueryBuilder('e')
-                    ->setMaxResults($batchSize)
-                    ->setFirstResult($offset)
-                    ->getQuery()
-                    ->getResult();
+            for ($i = 1; $i <= mt_rand(50, 150); ++$i) {
+                $command = new SubmitProjectCommand();
+                $command->title = $faker->words(5, true);
+                $command->budget = $faker->randomFloat(nbMaxDecimals: 2, min: $submissionRequirements->getMinBudget()->getAmount(), max: $submissionRequirements->getMaxBudget()->getAmount());
+                $command->category = $faker->randomElement($categories);
+                $command->houseNumber = $faker->randomNumber();
+                $command->street = 'вул. '.$faker->streetName;
+                $command->description = $faker->realText(mt_rand(300, 1000));
 
-                $totalUsers = $manager->createQueryBuilder()
-                    ->select('count(u.id)')
-                    ->from(UserEntity::class, 'u')
-                    ->getQuery()
-                    ->getSingleScalarResult();
+                $submission = $session->getStages()->findFirst(fn (string $value, Stage $stage) => $stage->isSubmission());
 
-                foreach ($sessions as $session) {
-                    $submissionRequirements = $session->getSubmissionRequirements();
+                $project = $this->projectFactory->create($command, $faker->randomElement($users), $session, $submission->getStartDate());
 
-                    $users = $this->randomUsers->get($manager, $session, random_int(100, $totalUsers));
-
-                    $categories = $submissionRequirements->getCategories();
-
-                    for ($i = 1; $i <= random_int(20, 100); ++$i) {
-                        $command = new SubmitProjectCommand();
-                        $command->title = $faker->words(5, true);
-                        $command->budget = $faker->randomFloat(nbMaxDecimals: 2, min: $submissionRequirements->getMinBudget()->getAmount(), max: $submissionRequirements->getMaxBudget()->getAmount());
-                        $command->category = $faker->randomElement($categories);
-                        $command->houseNumber = $faker->randomNumber();
-                        $command->street = 'вул. '.$faker->streetName;
-                        $command->description = $faker->realText(random_int(300, 1000));
-
-                        $submission = $session->getStages()->findFirst(fn (string $value, Stage $stage) => $stage->isSubmission());
-
-                        $project = $this->projectFactory->create($command, $faker->randomElement($users), $session, $submission->getStartDate());
-
-                        $manager->persist($project);
-                    }
-                }
-
-                $offset += $batchSize;
-            } while (count($sessions) > 0);
-
+                $manager->persist($project);
+            }
             $manager->flush();
-        } catch (\Exception $e) {
-            throw $e;
         }
     }
 

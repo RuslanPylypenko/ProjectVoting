@@ -21,25 +21,22 @@ docker-pull:
 api-init: api-composer-install api-wait-db api-migrations
 
 api-fixtures:
-	docker compose run --rm api-php-fpm php bin/console doctrine:fixtures:load --no-interaction
-
-api-append-projects:
-	docker compose run --rm api-php-fpm php bin/console doctrine:fixtures:load --group=projects --append --no-interaction
+	docker compose run --rm api-php-cli php bin/console doctrine:fixtures:load --no-interaction
 
 api-test:
-	docker compose run --rm api-php-fpm ./vendor/bin/phpunit
+	docker compose run --rm api-php-cli ./vendor/bin/phpunit
 
 api-migrations:
-	docker compose run --rm api-php-fpm php bin/console do:mi:mi --no-interaction
+	docker compose run --rm api-php-cli php bin/console do:mi:mi --no-interaction
 
 api-composer-install:
-	docker compose run --rm api-php-fpm composer install
+	docker compose run --rm api-php-cli composer install
 
 api-wait-db:
-	docker compose run --rm api-php-fpm wait-for-it api-mysql:3306 -t 30
+	docker compose run --rm api-php-cli wait-for-it api-mysql:3306 -t 30
 
 validate:
-	docker compose run --rm api-php-fpm ./vendor/bin/php-cs-fixer fix
+	docker compose run --rm api-php-cli ./vendor/bin/php-cs-fixer fix
 
 bash:
-	docker compose exec api-php-fpm bash
+	docker compose exec api-php-cli bash

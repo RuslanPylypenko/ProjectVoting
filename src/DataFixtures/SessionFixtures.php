@@ -29,7 +29,7 @@ class SessionFixtures extends Fixture implements DependentFixtureInterface
 
         $cities = $manager->getRepository(CityEntity::class)->findAll();
         foreach ($cities as $city) {
-            $sessionsCount = random_int(2, 4);
+            $sessionsCount = random_int(1, 5);
             for ($i = 0; $i <= $sessionsCount; ++$i) {
                 $end = null;
                 $start = (new \DateTime())->modify('-'.random_int(0, 5).' weeks')->modify('-'.$i.' years');

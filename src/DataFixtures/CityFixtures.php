@@ -14,20 +14,23 @@ class CityFixtures extends Fixture
     {
         $faker = Factory::create('uk_UA');
 
-        $city = new CityEntity(
-            'Львів',
-            'lviv',
-            new Address('Львів', 'Україна')
-        );
-        $manager->persist($city);
+        if (null === $manager->getRepository(CityEntity::class)->findOneBy(['slug' => 'kyiv'])) {
+            $city = new CityEntity(
+                'Київ',
+                'kyiv',
+                new Address('Київ', 'Україна'),
+            );
+            $manager->persist($city);
+        }
 
-        $city = new CityEntity(
-            'Київ',
-            'kyiv',
-            new Address('Київ', 'Україна'),
-        );
-
-        $manager->persist($city);
+        for ($i = 0; $i < 5; ++$i) {
+            $city = new CityEntity(
+                $city = $faker->city,
+                $city,
+                new Address($city, 'Україна'),
+            );
+            $manager->persist($city);
+        }
 
         $manager->flush();
     }

@@ -2,11 +2,6 @@
 
 namespace App\DataFixtures;
 
-use App\Domain\Project\Entity\ProjectEntity;
-use App\Domain\Session\Entity\SessionEntity;
-use App\Domain\Session\Entity\Stage;
-use App\Domain\User\Entity\UserEntity;
-use App\Domain\Vote\Entity\VoteEntity;
 use App\Domain\Vote\Factory\VoteFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -21,54 +16,34 @@ class ProjectVoteFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '8G');
 
-        $faker = Factory::create('uk_UA');
-        $sessions = $manager->getRepository(SessionEntity::class)
-            ->createQueryBuilder('s')
-            ->getQuery()
-            ->toIterable();
+        $faker = Factory::create();
+        $connection = $manager->getConnection();
 
-        $totalUsers = $manager->createQueryBuilder()
-            ->select('count(u.id)')
-            ->from(UserEntity::class, 'u')
-            ->getQuery()
-            ->getSingleScalarResult();
+        $projectIds = $connection->fetchFirstColumn('SELECT id FROM projects');
+        $userIds = $connection->fetchFirstColumn('SELECT id FROM users');
 
-        foreach ($sessions as $session) {
-            $users = $this->randomUsers->get($manager, $session, random_int(10, $totalUsers));
+        $batchSize = 1_000;
+        $sql = 'INSERT IGNORE INTO project_votes (project_id, user_id, created_at) VALUES ';
 
-            /** @var Stage $voting */
-            $voting = $session->getStages()->findFirst(fn (string $value, Stage $stage) => $stage->isVoting());
+        for ($batch = 0; $batch < 5_000; ++$batch) {
+            $values = [];
 
-            $projects = $manager->getRepository(ProjectEntity::class)
-                ->createQueryBuilder('p')
-                ->where('p.session = :sessionId')
-                ->setParameter('sessionId', $session->getId())
-                ->getQuery()
-                ->toIterable();
+            for ($i = 0; $i < $batchSize; ++$i) {
+                $projectId = $faker->randomElement($projectIds);
+                $userId = $faker->randomElement($userIds);
 
-
-            foreach ($projects as $project) {
-                $votes = [];
-                foreach ($faker->randomElements($users, random_int(0, count($users))) as $user) {
-                    $vote = $this->voteFactory->createVote($user, $project, $session, $voting->getStartDate());
-                    $manager->persist($vote);
-
-                    $votes[] = $vote;
-                }
-
-                $manager->flush();
-                foreach ($votes as $vote) {
-                    $manager->detach($vote);
-                }
-
-                $manager->detach($project);
+                $values[] = sprintf(
+                    '(%d, %d, "%s")',
+                    $projectId,
+                    $userId,
+                    $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d H:i:s')
+                );
             }
-            $manager->detach($session);
-        }
 
-        $manager->flush();
+            $connection->executeQuery($sql.implode(', ', $values));
+        }
     }
 
 

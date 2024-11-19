@@ -9,7 +9,21 @@ services:
 
   api-php-fpm:
     build:
-      context: './docker/php'
+      context: .
+      dockerfile: docker/php-fpm/Dockerfile
+    volumes:
+      - ./:/var/www/api
+    restart: on-failure
+    user: root
+    environment:
+      PHP_IDE_CONFIG: "serverName=Docker"
+    depends_on:
+      - api-mysql
+
+  api-php-cli:
+    build:
+      context: .
+      dockerfile: docker/php-cli/Dockerfile
     volumes:
       - ./:/var/www/api
     restart: on-failure

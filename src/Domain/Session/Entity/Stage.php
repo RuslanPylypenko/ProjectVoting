@@ -26,7 +26,7 @@ class Stage
     private \DateTime $endDate;
 
     #[ORM\ManyToOne(targetEntity: SessionEntity::class, cascade: ['persist'], inversedBy: 'stages')]
-    #[ORM\JoinColumn(name: 'session_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(name: 'session_id', nullable: false)]
     private ?SessionEntity $session = null;
 
     public function __construct(StageName $name, \DateTime $startDate, \DateTime $endDate)

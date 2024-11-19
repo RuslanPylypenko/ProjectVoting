@@ -63,4 +63,14 @@ class Address
     {
         return $address->city === $this->city;
     }
+
+    public function getCity(): string
+    {
+        return $this->city;
+    }
+
+    public function getCountry(): string
+    {
+        return $this->country;
+    }
 }
